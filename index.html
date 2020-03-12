@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>Sample CRUD Firebase Javascript - 01 Read Data</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<h1>
+			Firebase CRUD with Vanilla Javascript
+			<br />
+			<small>
+				<em>01 Read Data</em>
+			</small>
+		</h1>
+		<ul id="userList"></ul>
+		<div id="userDetail">
+			<p>
+				Name :
+				<strong class="detailName"></strong>
+			</p>
+			<p>
+				Age:
+				<strong class="detailAge"></strong>
+			</p>
+			<p>
+				Email:
+				<strong class="detailEmail"></strong>
+			</p>
+		</div>
+		<!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
+
+		<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+		<script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-app.js"></script>
+
+		<!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
+		<script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-analytics.js"></script>
+
+		<!-- Add Firebase products that you want to use -->
+		<script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-auth.js"></script>
+		<!-- <script src="https://www.gstatic.com/firebasejs/3.1.0/firebase-auth.js"></script> -->
+		<script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-database.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/7.10.0/firebase-firestore.js"></script>
+
+
+		<script>
+		  // Your web app's Firebase configuration
+		  var firebaseConfig = {
+		    apiKey: "AIzaSyD0ASphjMDmf9GcbVbo1MuJhFZpQ0Exs3w",
+		    authDomain: "developer-4772e.firebaseapp.com",
+		    databaseURL: "https://developer-4772e.firebaseio.com",
+		    projectId: "developer-4772e",
+		    storageBucket: "developer-4772e.appspot.com",
+		    messagingSenderId: "629954280163",
+		    appId: "1:629954280163:web:c05227b6451215f7cf63d6",
+		    measurementId: "G-88RD5Z970R"
+		  };
+		  // Initialize Firebase
+		  firebase.initializeApp(firebaseConfig);
+		  firebase.analytics();
+
+		  const dbRef = firebase.database().ref();
+			const usersRef = dbRef.child('users');
+
+			const userListUI = document.getElementById("userList");
+			usersRef.on("child_added", snap => {
+			  let user = snap.val();
+			  let $li = document.createElement("li");
+			  $li.innerHTML = user.name;
+			  $li.setAttribute("child-key", snap.key);
+			  $li.addEventListener("click", userClicked); 
+			  userListUI.append($li);
+			});
+
+			function userClicked(e) {
+			  var userID = e.target.getAttribute("child-key");
+			  const userRef = dbRef.child('users/' + userID);
+			  const userDetailUI = document.getElementById("userDetail");
+			  userDetailUI.innerHTML = ""
+			  userRef.on("child_added", snap => {
+			    var $p = document.createElement("p");
+			    $p.innerHTML = snap.key + " - " + snap.val(); 
+			    userDetailUI.append($p);
+			  });
+			}
+		</script>
+		<!-- firebase sdk link goes here -->
+		<!-- <script type="text/javascript" src="app.js"></script> -->
+	</body>
+</html>
