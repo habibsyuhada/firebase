@@ -13,6 +13,14 @@
 				<em>01 Read Data</em>
 			</small>
 		</h1>
+		<!-- add user module -->
+		<section id="add-user-module"> <button id="open-add-user-form-btn">+</button>
+		  <form>
+	      <h2>Add User</h2> name:<br> <input type='text' data-key='name' class='user-input'><br> age:<br> <input
+	          type='text' data-key='age' class='user-input'><br> email:<br> <input type='text' data-key='email'
+	          class='user-input'><br> <button type='button' id="add-user-btn">add user</button>
+		  </form>
+		</section>
 		<ul id="userList"></ul>
 		<div id="userDetail">
 			<p>
@@ -28,6 +36,15 @@
 				<strong class="detailEmail"></strong>
 			</p>
 		</div>
+		<!-- edit user module -->
+		<section id="edit-user-module">
+	    <form>
+        <h2>Edit user</h2> <input type="hidden" class="edit-userid"> name:<br> <input type='text' data-key='name'
+            class='edit-user-input'><br> age:<br> <input type='text' data-key='age' class='edit-user-input'><br>
+        email:<br> <input type='text' data-key='email' class='edit-user-input'><br> <button type='button'
+            id="edit-user-btn">save</button>
+	    </form>
+		</section>
 		<!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
 
 		<!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
@@ -44,47 +61,9 @@
 
 
 		<script>
-		  // Your web app's Firebase configuration
-		  var firebaseConfig = {
-		    apiKey: "AIzaSyD0ASphjMDmf9GcbVbo1MuJhFZpQ0Exs3w",
-		    authDomain: "developer-4772e.firebaseapp.com",
-		    databaseURL: "https://developer-4772e.firebaseio.com",
-		    projectId: "developer-4772e",
-		    storageBucket: "developer-4772e.appspot.com",
-		    messagingSenderId: "629954280163",
-		    appId: "1:629954280163:web:c05227b6451215f7cf63d6",
-		    measurementId: "G-88RD5Z970R"
-		  };
-		  // Initialize Firebase
-		  firebase.initializeApp(firebaseConfig);
-		  firebase.analytics();
 
-		  const dbRef = firebase.database().ref();
-			const usersRef = dbRef.child('users');
-
-			const userListUI = document.getElementById("userList");
-			usersRef.on("child_added", snap => {
-			  let user = snap.val();
-			  let $li = document.createElement("li");
-			  $li.innerHTML = user.name;
-			  $li.setAttribute("child-key", snap.key);
-			  $li.addEventListener("click", userClicked); 
-			  userListUI.append($li);
-			});
-
-			function userClicked(e) {
-			  var userID = e.target.getAttribute("child-key");
-			  const userRef = dbRef.child('users/' + userID);
-			  const userDetailUI = document.getElementById("userDetail");
-			  userDetailUI.innerHTML = ""
-			  userRef.on("child_added", snap => {
-			    var $p = document.createElement("p");
-			    $p.innerHTML = snap.key + " - " + snap.val(); 
-			    userDetailUI.append($p);
-			  });
-			}
 		</script>
 		<!-- firebase sdk link goes here -->
-		<!-- <script type="text/javascript" src="app.js"></script> -->
+		<script type="text/javascript" src="app.js"></script>
 	</body>
 </html>
