@@ -4,12 +4,20 @@
 
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyD0ASphjMDmf9GcbVbo1MuJhFZpQ0Exs3w",
-    authDomain: "developer-4772e.firebaseapp.com",
-    databaseURL: "https://developer-4772e.firebaseio.com",
-    projectId: "developer-4772e",
-    storageBucket: "developer-4772e.appspot.com",
-    messagingSenderId: "629954280163",
+    // apiKey: "AIzaSyD0ASphjMDmf9GcbVbo1MuJhFZpQ0Exs3w",
+    // authDomain: "developer-4772e.firebaseapp.com",
+    // databaseURL: "https://developer-4772e.firebaseio.com",
+    // projectId: "developer-4772e",
+    // storageBucket: "developer-4772e.appspot.com",
+    // messagingSenderId: "629954280163",
+
+    apiKey: "AIzaSyAoNlyKviIFQlQknOS8HOwiyciFVMb9gzE",
+    authDomain: "car-e-cf9ff.firebaseapp.com",
+    databaseURL: "https://car-e-cf9ff.firebaseio.com",
+    projectId: "car-e-cf9ff",
+    storageBucket: "car-e-cf9ff.appspot.com",
+    messagingSenderId: "411178176195",
+    // appId: "1:411178176195:web:dcc1562133d89bc7d51c76"
 };
 
 
