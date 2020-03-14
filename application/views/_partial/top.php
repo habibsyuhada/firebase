@@ -37,7 +37,7 @@
 		<!-- main content area start -->
 		<div class="main-content">
 			<!-- header area start -->
-			<div class="header-area py-0 pr-0">
+			<div class="header-area py-0 pr-0" style="overflow: hidden;">
 				<div class="row align-items-center">
 					<!-- nav and search button -->
 					<div class="col-md-12 col-sm-12 clearfix">
@@ -48,7 +48,7 @@
 						</div>
 						<div class="user-profile pull-right my-0">
 							<img class="avatar user-thumb" src="<?php echo base_url() ?>assets/images/author/avatar.png" alt="avatar">
-							<h4 class="user-name dropdown-toggle" data-toggle="dropdown">Kumkum Rai <i class="fa fa-angle-down"></i></h4>
+							<h4 class="user-name dropdown-toggle" data-toggle="dropdown">Habib Syuhada <i class="fa fa-angle-down"></i></h4>
 							<div class="dropdown-menu">
 								<a class="dropdown-item" href="#">Settings</a>
 								<a class="dropdown-item" href="#">Log Out</a>
