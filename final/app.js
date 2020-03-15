@@ -17,7 +17,7 @@ var config = {
     projectId: "car-e-cf9ff",
     storageBucket: "car-e-cf9ff.appspot.com",
     messagingSenderId: "411178176195",
-    // appId: "1:411178176195:web:dcc1562133d89bc7d51c76"
+    appId: "1:411178176195:web:dcc1562133d89bc7d51c76"
 };
 
 
@@ -26,7 +26,7 @@ firebase.initializeApp(config);
 
 // Firebase Database Reference and the child
 const dbRef = firebase.database().ref();
-const usersRef = dbRef.child('users');
+const usersRef = dbRef.child('Users');
 
 
 	readUserData(); 
@@ -38,7 +38,7 @@ const usersRef = dbRef.child('users');
 function readUserData() {
 
 	const userListUI = document.getElementById("user-list");
-
+	console.log(usersRef);
 	usersRef.on("value", snap => {
 
 		userListUI.innerHTML = ""
