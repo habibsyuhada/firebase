@@ -20,12 +20,12 @@
 				<div class="menu-inner">
 					<nav>
 						<ul class="metismenu" id="menu">
-							<li class="active"><a href="#"><i class="fa fa-home"></i><span>Dashboard</span></a></li>
+							<li class="active"><a href="<?php echo base_url() ?>"><i class="fa fa-home"></i><span>Dashboard</span></a></li>
 							<li class="active">
 								<a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-users"></i><span>User Management</span></a>
 								<ul class="collapse in">
-									<li><a href="#">User List</a></li>
-									<li><a href="#">Add New User</a></li>
+									<li><a href="<?php echo base_url() ?>user/user_list">User List</a></li>
+									<li><a href="<?php echo base_url() ?>user/user_new">Add New User</a></li>
 								</ul>
 							</li>
 						</ul>

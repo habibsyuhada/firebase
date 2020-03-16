@@ -26,12 +26,12 @@
     </div>
   </div>
   <div class="row my-4">
-    <div class="col-xl-6 col-md-6">
+    <div class="col-xl-6 col-lg-12">
     	<div class="bg-white text-center p-3">
     		<canvas id="dailyreportChart"></canvas>
     	</div>
     </div>
-    <div class="col-xl-6 col-md-6">
+    <div class="col-xl-6 col-lg-12">
     	<div class="bg-white p-3">
     		<h3 class="font-weight-bold mb-2 text-center">In Progress Order</h3>
     		<table class="table table-bordered text-center">
@@ -57,7 +57,7 @@
             </tr>
           	<?php endfor; ?>
           </tbody>
-      </table>
+        </table>
     	</div>
     </div>
   </div>
