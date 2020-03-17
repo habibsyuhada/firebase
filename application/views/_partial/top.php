@@ -11,9 +11,9 @@
 	<div class="page-container">
 		<!-- sidebar menu area start -->
 		<div class="sidebar-menu">
-			<div class="sidebar-header">
-				<div class="logo">
-					<a href="#"><img src="<?php echo base_url() ?>assets/images/icon/logo.png" alt="logo"></a>
+			<div class="sidebar-header bg-white">
+				<div class="logo py-3">
+					<!-- <a href="#"><img src="<?php echo base_url() ?>assets/images/logo_sucofindo.png" alt="logo"></a> -->
 				</div>
 			</div>
 			<div class="main-menu">

@@ -24,6 +24,10 @@ class Home extends CI_Controller {
 		$this->load->view('index', $data);
 	}
 
+	public function login(){
+		$this->load->view('login');
+	}
+
 	public function hostname(){
 		echo $_SERVER['HTTP_HOST'].'<br>';
 		echo base_url();
