@@ -29,6 +29,15 @@ class User extends CI_Controller {
 	}
 
 	public function user_new(){
+		$data['module'] 			= 'new';
+		$data['subview'] 			= 'user/user_new';
+		$data['meta_title'] 	= 'Training';
+		$this->load->view('index', $data);
+	}
+
+	public function user_edit($id){
+		$data['id'] 					= $id;
+		$data['module'] 			= 'edit';
 		$data['subview'] 			= 'user/user_new';
 		$data['meta_title'] 	= 'Training';
 		$this->load->view('index', $data);

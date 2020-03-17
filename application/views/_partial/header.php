@@ -64,6 +64,9 @@
   <script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
   <script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js"></script>
 
+  <!-- SweetAlert2 -->
+  <script type="text/javascript" src="<?php echo base_url();?>assets/js/sweetalert2.all.min.js"></script>
+
 	<!-- firebase -->
 	<script src="<?php echo base_url(); ?>assets/js/firebase-app.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/firebase-firestore.js"></script>
