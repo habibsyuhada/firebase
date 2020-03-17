@@ -86,12 +86,14 @@
     $("form").submit(function(e){
       e.preventDefault();
       sweetalert('loading', 'Please Wait...');
-      return docRef.update({
+      var data = {
         Name : $("input[name=name]").val(),
         Email : $("input[name=email]").val(),
         Role : $("input[name=role]").val(),
-        Department : $("input[name=department]").val(),
-      })
+        Departemen : $("input[name=department]").val(),
+      }
+      docRef = db.collection("Users").doc("<?php echo $id; ?>");
+      docRef.update(data)
       .then(function() {
         sweetalert("success", "Document successfully updated!");
       })

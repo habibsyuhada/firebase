@@ -37,7 +37,31 @@
   </div>
 </div>
 <script type="text/javascript">
-	load_data();
+	load_data2();
+
+	function load_data2() {
+		db.collection("Users")
+    .onSnapshot(function(querySnapshot) {
+    	var json_all = [];
+      querySnapshot.forEach(function(doc) {
+        console.log(doc.data());
+        var data = doc.data();
+        var action = "<button type='button' class='btn btn-sm btn-danger' onclick='delete_data(this)' data-key='"+doc.id+"'><i class='fa fa-trash'></i></button>"+
+        	"&nbsp;<a href='<?php echo base_url() ?>user/user_edit/"+doc.id+"' class='btn btn-sm btn-warning'><i class='fa fa-pencil'></i></a>";
+        var json_arr = [data.Nama || "", data.Email || "", data.Role || "", data.Departemen || "", data.Password || "", action];
+        json_all.push(json_arr);
+      });
+
+      console.log(JSON.stringify(json_all));
+	    $('.datatables').DataTable().clear().destroy();
+	    $('.datatables').DataTable({
+	    	responsive: true,
+	    	data: json_all,
+	    	order:[]
+	    }).draw();
+	    $('#loading_firebase').hide();
+    });
+	}
 
 	function load_data() {
 		$('#loading_firebase').show();
