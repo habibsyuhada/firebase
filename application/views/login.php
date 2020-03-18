@@ -121,14 +121,39 @@
       	var jumlah = querySnapshot.size;
       	console.log(jumlah);
       	if(jumlah > 0){
-      		sweetalert('success', 'Success Login!');
+      		// sweetalert('success', 'Success Login!');
+      		var id, nama, email, departemen, role;
+
+      		querySnapshot.forEach(function(doc) {
+		        console.log(doc.id, " => ", doc.data());
+		        var data = doc.data();
+		        id = doc.id;
+		        nama = data.Nama;
+		        email = data.Email;
+		        role = data.Role;
+		        departemen = data.Departemen;
+		      });
+
+      		$.ajax({
+            url: "<?php echo base_url();?>home/login_process",
+            type: "post",
+            data: {
+              'id': id,
+              'nama': nama,
+              'email': email,
+              'role': role,
+              'departemen': departemen,
+            },
+            success: function(data) {
+            	// alert(data);
+              window.location = "<?php echo base_url() ?>"
+            }
+          });
       	}
       	else{
       		sweetalert('error', 'Wrong User or Password!');
       	}
-        // querySnapshot.forEach(function(doc) {
-        //   console.log(doc.id, " => ", doc.data());
-        // });
+        
 	    })
 	    .catch(function(error) {
 	    	console.log("Error getting documents: ", error);
