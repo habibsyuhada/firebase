@@ -115,49 +115,60 @@
       var email = $("input[name=email]").val();
       var password = $("input[name=password]").val();
       sweetalert('loading', 'Please Wait...');
-      db.collection("Users").where("Email", "==", email).where("Password", "==", password)
-      .get()
-      .then(function(querySnapshot) {
-      	var jumlah = querySnapshot.size;
-      	console.log(jumlah);
-      	if(jumlah > 0){
-      		// sweetalert('success', 'Success Login!');
-      		var id, nama, email, departemen, role;
+      firebase.auth().signInWithEmailAndPassword(data.Email, data.Password)
+	    .then(function(user){
+	      db.collection("Users").where("Email", "==", email).where("Password", "==", password)
+	      .get()
+	      .then(function(querySnapshot) {
+	      	var jumlah = querySnapshot.size;
+	      	console.log(jumlah);
+	      	if(jumlah > 0){
+	      		// sweetalert('success', 'Success Login!');
+	      		var id, nama, email, departemen, role;
 
-      		querySnapshot.forEach(function(doc) {
-		        console.log(doc.id, " => ", doc.data());
-		        var data = doc.data();
-		        id = doc.id;
-		        nama = data.Nama;
-		        email = data.Email;
-		        role = data.Role;
-		        departemen = data.Departemen;
-		      });
+	      		querySnapshot.forEach(function(doc) {
+			        console.log(doc.id, " => ", doc.data());
+			        var data = doc.data();
+			        id = doc.id;
+			        nama = data.Nama;
+			        email = data.Email;
+			        role = data.Role;
+			        departemen = data.Departemen;
+			      });
 
-      		$.ajax({
-            url: "<?php echo base_url();?>home/login_process",
-            type: "post",
-            data: {
-              'id': id,
-              'nama': nama,
-              'email': email,
-              'role': role,
-              'departemen': departemen,
-            },
-            success: function(data) {
-            	// alert(data);
-              window.location = "<?php echo base_url() ?>"
-            }
-          });
-      	}
-      	else{
-      		sweetalert('error', 'Wrong User or Password!');
-      	}
-        
-	    })
-	    .catch(function(error) {
-	    	console.log("Error getting documents: ", error);
+	      		$.ajax({
+	            url: "<?php echo base_url();?>home/login_process",
+	            type: "post",
+	            data: {
+	              'id': id,
+	              'nama': nama,
+	              'email': email,
+	              'role': role,
+	              'departemen': departemen,
+	            },
+	            success: function(data) {
+	            	// alert(data);
+	              window.location = "<?php echo base_url() ?>"
+	            }
+	          });
+	      	}
+	      	else{
+	      		sweetalert('error', 'Wrong User or Password!');
+	      	}
+	        
+		    })
+		    .catch(function(error) {
+		    	console.log("Error : ", error);
+		    });
+	    }).catch(function(error) {
+	      console.log(error.message);
+	      if (errorCode === 'auth/wrong-password') {
+          sweetalert('error', 'Wrong User or Password!');
+        } else {
+          sweetalert('error', errorMessage);
+        }
 	    });
+      
     });
 
     function sweetalert(type, text = "Wait ...") {

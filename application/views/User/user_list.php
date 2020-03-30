@@ -107,12 +107,20 @@
       if (result.value) {
       	sweetalert('loading', 'Please Wait...');
         var key = $(btn).attr("data-key");
-				db.collection("Users").doc(key).delete().then(function() {
-					load_data();
-			    sweetalert('success', 'Document successfully deleted!');
-				}).catch(function(error) {
+      	admin.auth().deleteUser(key)
+			  .then(function() {
+			  	db.collection("Users").doc(key).delete().then(function() {
+						load_data();
+				    sweetalert('success', 'Document successfully deleted!');
+					}).catch(function(error) {
+				    sweetalert('error', error);
+					});
+			  })
+			  .catch(function(error) {
+			    console.log('Error deleting user:', error);
 			    sweetalert('error', error);
-				});
+			  });
+				
       }
     })
 	}

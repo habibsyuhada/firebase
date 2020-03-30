@@ -40,20 +40,29 @@
     	Email : $("input[name=email]").val(),
     	Role : $("input[name=role]").val(),
     	Department : $("input[name=department]").val(),
+      Password : '123456',
     }
-    console.log(data);
-    send_data(data)
+    // console.log(data);
+    firebase.auth().createUserWithEmailAndPassword(data.Email, data.Password)
+    .then(function(res){
+      // console.log(res);
+      send_data(data, res.user)
+    }).catch(function(error) {
+      console.log(error.message);
+      sweetalert('error', error.message);
+    });
+    
 		return  false;
   });
 
-	async function send_data(data) {
+	async function send_data(data, user) {
 		var alert;
-		db.collection("Users").add({
+		db.collection("Users").doc(user.uid).set({
 	    Nama: data.Name,
 	    Email: data.Email,
 	    Role: data.Role,
 	    Departemen: data.Department,
-	    Password: "12345",
+	    Password: data.Password,
 		})
 		.then(function(docRef) {
 		  console.log("Document written with ID: ", docRef.id);
@@ -62,7 +71,7 @@
 		})
 		.catch(function(error) {
 		  console.error("Error adding document: ", error);
-      sweetalert('error', error);
+      sweetalert('error', error.message);
 		});
 	}
   <?php elseif($module == 'edit'): ?>
@@ -76,6 +85,8 @@
         $("input[name=role]").val(data.Role);
         $("input[name=department]").val(data.Departemen);
         $('#loading_firebase').hide();
+
+        $("input[name=email]").attr('disabled', true);
       } else {
         window.location = '<?php echo base_url() ?>user';
       }
@@ -88,7 +99,7 @@
       sweetalert('loading', 'Please Wait...');
       var data = {
         Name : $("input[name=name]").val(),
-        Email : $("input[name=email]").val(),
+        // Email : $("input[name=email]").val(),
         Role : $("input[name=role]").val(),
         Departemen : $("input[name=department]").val(),
       }

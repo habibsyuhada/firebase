@@ -34,6 +34,10 @@ class Home extends CI_Controller {
 		$this->load->view('login');
 	}
 
+	public function test(){
+		$this->load->view('test');
+	}
+
 	public function login_process(){
 		$data_post 					= $this->input->post();
 		$session_user = array(
