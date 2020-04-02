@@ -56,6 +56,8 @@
   });
 
 	async function send_data(data, user) {
+    console.log(user);
+    console.log(user.uid);
 		var alert;
 		db.collection("Users").doc(user.uid).set({
 	    Nama: data.Name,
@@ -64,8 +66,9 @@
 	    Departemen: data.Department,
 	    Password: data.Password,
 		})
-		.then(function(docRef) {
-		  console.log("Document written with ID: ", docRef.id);
+		.then(function() {
+		  // console.log(docRef);
+      // console.log("Document written with ID: ", docRef.id);
       sweetalert('success', 'You successfully insert new user.');
       $('form').trigger("reset");
 		})
