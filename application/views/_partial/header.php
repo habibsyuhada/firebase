@@ -70,6 +70,7 @@
 	<!-- firebase -->
 	<script src="<?php echo base_url(); ?>assets/js/firebase-app.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/firebase-firestore.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/firebase-auth.js"></script>
 	<script type="text/javascript">
 		firebase.initializeApp({
 		  apiKey: 'AIzaSyAoNlyKviIFQlQknOS8HOwiyciFVMb9gzE',

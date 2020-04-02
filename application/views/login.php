@@ -95,6 +95,7 @@
   <!-- firebase -->
 	<script src="<?php echo base_url(); ?>assets/js/firebase-app.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/firebase-firestore.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/firebase-auth.js"></script>
 	<script type="text/javascript">
 		firebase.initializeApp({
 		  apiKey: 'AIzaSyAoNlyKviIFQlQknOS8HOwiyciFVMb9gzE',
@@ -115,7 +116,9 @@
       var email = $("input[name=email]").val();
       var password = $("input[name=password]").val();
       sweetalert('loading', 'Please Wait...');
-      firebase.auth().signInWithEmailAndPassword(data.Email, data.Password)
+      console.log(email);
+      console.log(password);
+      firebase.auth().signInWithEmailAndPassword(email, password)
 	    .then(function(user){
 	      db.collection("Users").where("Email", "==", email).where("Password", "==", password)
 	      .get()
