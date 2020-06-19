@@ -73,9 +73,9 @@
 	<script src="<?php echo base_url(); ?>assets/js/firebase-auth.js"></script>
 	<script type="text/javascript">
 		firebase.initializeApp({
-		  apiKey: 'AIzaSyAoNlyKviIFQlQknOS8HOwiyciFVMb9gzE',
-		  authDomain: 'car-e-cf9ff.firebaseapp.com',
-		  projectId: 'car-e-cf9ff'
+		  apiKey: 'AIzaSyBwC5sLWQrEjziZnMaHx6inXs2iK0tvaiI',
+		  authDomain: 'car-e-c6518.firebaseapp.com',
+		  projectId: 'car-e-c6518'
 		});
 
 		var db = firebase.firestore();
