@@ -71,14 +71,18 @@
 	<script src="<?php echo base_url(); ?>assets/js/firebase-app.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/firebase-firestore.js"></script>
 	<script src="<?php echo base_url(); ?>assets/js/firebase-auth.js"></script>
+	<script src="<?php echo base_url(); ?>assets/js/firebase-storage.js"></script>
 	<script type="text/javascript">
 		firebase.initializeApp({
 		  apiKey: 'AIzaSyBwC5sLWQrEjziZnMaHx6inXs2iK0tvaiI',
 		  authDomain: 'car-e-c6518.firebaseapp.com',
-		  projectId: 'car-e-c6518'
+		  projectId: 'car-e-c6518',
+		  storageBucket: 'car-e-c6518.appspot.com'
 		});
 
 		var db = firebase.firestore();
+		var storage = firebase.storage();
+		var storageRef = firebase.storage().ref();
 	</script>
 </head>
 

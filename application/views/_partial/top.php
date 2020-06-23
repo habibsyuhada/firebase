@@ -28,6 +28,13 @@
 									<li><a href="<?php echo base_url() ?>user/user_new">Add New User</a></li>
 								</ul>
 							</li>
+							<li class="active">
+								<a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-car"></i><span>Car Management</span></a>
+								<ul class="collapse in">
+									<li><a href="<?php echo base_url() ?>car/car_list">Car List</a></li>
+									<li><a href="<?php echo base_url() ?>car/car_new">Add New Car</a></li>
+								</ul>
+							</li>
 						</ul>
 					</nav>
 				</div>
