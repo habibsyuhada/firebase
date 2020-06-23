@@ -6,9 +6,7 @@
 	    		<table class="table table-bordered text-center datatables">
 	          <thead class="text-uppercase bg-primary">
 	            <tr class="text-white">
-	              <th>Car Name</th>
-	              <th>Police Number</th>
-	              <th>Picture</th>
+	              <th>Department Name</th>
 	              <th>Action</th>
 	            </tr>
 	          </thead>
@@ -38,20 +36,16 @@
 	load_data2();
 
 	function load_data2() {
-		db.collection("Car")
+		db.collection("Bidang")
     .onSnapshot(function(querySnapshot) {
     	var json_all = [];
-    	var car_pic_name = [];
       querySnapshot.forEach(function(doc) {
         console.log(doc.data());
         var data = doc.data();
         var action = "<button type='button' class='btn btn-sm btn-danger' onclick='delete_data(this)' data-key='"+doc.id+"'><i class='fa fa-trash'></i></button>"+
-					"&nbsp;<a href='<?php echo base_url() ?>car/car_edit/"+doc.id+"' class='btn btn-sm btn-warning'><i class='fa fa-pencil'></i></a>";
-				var id_car = data.src_gambar.split(".");
-				id_car = id_car[0];
-        var json_arr = [data.nama_mobil || "", data.no_polisi || "", '<div id="car_'+id_car+'"><div class="loader"></div></div>' || "", action];
+					"&nbsp;<a href='<?php echo base_url() ?>department/department_edit/"+doc.id+"' class='btn btn-sm btn-warning'><i class='fa fa-pencil'></i></a>";
+        var json_arr = [data.nama || "", action];
         json_all.push(json_arr);
-        car_pic_name.push(data.src_gambar);
       });
 
       // console.log(JSON.stringify(json_all));
@@ -62,19 +56,6 @@
 	    	order:[]
 	    }).draw();
 	    $('#loading_firebase').hide();
-
-			car_pic_name.forEach(function(item) {
-				storageRef.child('mobil/'+item).getDownloadURL().then(function(url) {
-					console.log(url);
-					console.log($("#car_"+item).html());
-					// $("#car_"+item).removeClass("loader");
-					var id_car = item.split(".");
-					id_car = id_car[0];
-					$("#car_"+id_car).html("<img src='"+url+"'/>");
-				}).catch(function(error) {
-					console.log(error);
-				});
-			});
     });
 	}
 
@@ -122,7 +103,7 @@
       if (result.value) {
       	sweetalert('loading', 'Please Wait...');
         var key = $(btn).attr("data-key");
-      	db.collection("Car").doc(key).delete().then(function() {
+      	db.collection("Bidang").doc(key).delete().then(function() {
 					// load_data();
 			    sweetalert('success', 'Document successfully deleted!');
 				}).catch(function(error) {

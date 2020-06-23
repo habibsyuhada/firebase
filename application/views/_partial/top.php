@@ -35,6 +35,13 @@
 									<li><a href="<?php echo base_url() ?>car/car_new">Add New Car</a></li>
 								</ul>
 							</li>
+							<li class="active">
+								<a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-building"></i><span>Department Management</span></a>
+								<ul class="collapse in">
+									<li><a href="<?php echo base_url() ?>department/department_list">Department List</a></li>
+									<li><a href="<?php echo base_url() ?>department/department_new">Add New Department</a></li>
+								</ul>
+							</li>
 						</ul>
 					</nav>
 				</div>

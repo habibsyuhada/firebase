@@ -8,7 +8,7 @@
             <h5 class="text-center">Loading...</h5>
           </div>
     			<div class="form-group">
-            <label class="col-form-label">Car's Name</label>
+            <label class="col-form-label">Car Name</label>
             <input class="form-control" type="text" name="nama_mobil" placeholder="---" required>
           </div>
           <div class="form-group">
