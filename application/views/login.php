@@ -165,11 +165,7 @@
 		    });
 	    }).catch(function(error) {
 	      console.log(error.message);
-	      if (errorCode === 'auth/wrong-password') {
-          sweetalert('error', 'Wrong User or Password!');
-        } else {
-          sweetalert('error', errorMessage);
-        }
+	      sweetalert('error', error.message);
 	    });
       
     });
