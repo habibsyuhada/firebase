@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
-	<title>Login - srtdash</title>
+	<title>Login - <?php echo strtoupper("sucofindo") ?></title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" type="image/png" href="<?php echo base_url(); ?>assets/images/icon/favicon.ico">
 	<link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css">
@@ -138,22 +138,26 @@
 			        role = data.Role;
 			        departemen = data.Departemen;
 			      });
-
-	      		$.ajax({
-	            url: "<?php echo base_url();?>home/login_process",
-	            type: "post",
-	            data: {
-	              'id': id,
-	              'nama': nama,
-	              'email': email,
-	              'role': role,
-	              'departemen': departemen,
-	            },
-	            success: function(data) {
-	            	// alert(data);
-	              window.location = "<?php echo base_url() ?>"
-	            }
-	          });
+						if(role == 'Cost Manager'){
+							$.ajax({
+								url: "<?php echo base_url();?>home/login_process",
+								type: "post",
+								data: {
+									'id': id,
+									'nama': nama,
+									'email': email,
+									'role': role,
+									'departemen': departemen,
+								},
+								success: function(data) {
+									// alert(data);
+									window.location = "<?php echo base_url() ?>"
+								}
+							});
+						}
+						else{
+							sweetalert('error', 'Only Cost Manager can login to this Apps!');
+						}
 	      	}
 	      	else{
 	      		sweetalert('error', 'Wrong User or Password!');
@@ -164,8 +168,14 @@
 		    	console.log("Error : ", error);
 		    });
 	    }).catch(function(error) {
-	      console.log(error.message);
-	      sweetalert('error', error.message);
+	      if(error.code == 'auth/user-not-found'){
+					console.log('salah userpassword');
+					sweetalert('error', 'Wrong User or Password!');
+				}
+				else{
+					console.log(error);
+					sweetalert('error', error.message);
+				}
 	    });
       
     });

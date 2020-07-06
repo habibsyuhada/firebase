@@ -15,16 +15,6 @@
 	            </tr>
 	          </thead>
 	          <tbody>
-	          	<?php //for ($i=1; $i < 5; $i++): ?>
-	            <!-- <tr>
-	              <th><?php echo $i ?></th>
-	              <td>Habib Syuhada</td>
-	              <td>Driver <?php echo $i ?></td>
-	              <td>BP 1234 QA</td>
-	              <td>10:05</td>
-	              <td><a href="#" class="btn btn-sm btn-secondary">Detail</a></td>
-	            </tr> -->
-	          	<?php //endfor; ?>
 	          </tbody>
 	        </table>
 	        <div id="loading_firebase">
