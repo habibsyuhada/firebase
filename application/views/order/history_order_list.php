@@ -6,12 +6,15 @@
 	    		<table class="table table-bordered text-center datatables">
 	          <thead class="text-uppercase bg-primary">
 	            <tr class="text-white">
-	              <th>Name</th>
-	              <th>Email</th>
-	              <th>Role</th>
-	              <th>Departement</th>
-	              <th>Password</th>
-	              <th>Action</th>
+	              <th>Nama</th>
+	              <th>Departemen</th>
+	              <th>Proyek</th>
+	              <th>Tipe Perjalanan	</th>
+	              <th>Alamat Asal</th>
+	              <th>Alamat Tujuan</th>
+	              <th>Tanggal Berangkat</th>
+	              <th>Tanggal Selesai</th>
+	              <th>Driver</th>
 	            </tr>
 	          </thead>
 	          <tbody>
@@ -30,15 +33,25 @@
 	load_data2();
 
 	function load_data2() {
-		db.collection("Users")
+		var json_driver = {};
+		db.collection("Users").get().then((querySnapshot) => {
+	    querySnapshot.forEach((doc) => {
+				var data = doc.data();
+				if(data.Role == 'Driver'){
+					json_driver[doc.id] = data.Nama;
+				}
+	    });
+		}).catch(function(error) {
+		  console.log("Error getting document:", error);
+		});
+
+		db.collection("Request")
     .onSnapshot(function(querySnapshot) {
     	var json_all = [];
       querySnapshot.forEach(function(doc) {
         console.log(doc.data());
         var data = doc.data();
-        var action = "<button type='button' class='btn btn-sm btn-danger' onclick='delete_data(this)' data-key='"+doc.id+"'><i class='fa fa-trash'></i></button>"+
-        	"&nbsp;<a href='<?php echo base_url() ?>user/user_edit/"+doc.id+"' class='btn btn-sm btn-warning'><i class='fa fa-pencil'></i></a>";
-        var json_arr = [data.Nama || "", data.Email || "", data.Role || "", data.Departemen || "", data.Password || "", action];
+        var json_arr = [data.Nama || "", data.Departemen || "", data.Proyek || "", data.Perjalanan || "", data.Alamat_Asal || "", data.Alamat_Tujuan || "", data.Tanggal_Berangkat || "", data.Tanggal_Selesai || "", json_driver[data.driverId] || ""];
         json_all.push(json_arr);
       });
 
