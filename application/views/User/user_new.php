@@ -44,7 +44,7 @@
     var data = {
     	Name : $("input[name=name]").val(),
     	Email : $("input[name=email]").val(),
-    	Role : $("input[name=role]").val(),
+    	Role : $("select[name=role]").val(),
     	Department : $("input[name=department]").val(),
       Password : '123456',
     }
@@ -109,7 +109,7 @@
       var data = {
         Name : $("input[name=name]").val(),
         // Email : $("input[name=email]").val(),
-        Role : $("input[name=role]").val(),
+        Role : $("select[name=role]").val(),
         Departemen : $("input[name=department]").val(),
       }
       docRef = db.collection("Users").doc("<?php echo $id; ?>");
