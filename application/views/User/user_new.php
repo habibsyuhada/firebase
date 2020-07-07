@@ -107,7 +107,7 @@
       e.preventDefault();
       sweetalert('loading', 'Please Wait...');
       var data = {
-        Name : $("input[name=name]").val(),
+        Nama : $("input[name=name]").val(),
         // Email : $("input[name=email]").val(),
         Role : $("select[name=role]").val(),
         Departemen : $("input[name=department]").val(),
