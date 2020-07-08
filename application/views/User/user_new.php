@@ -20,7 +20,7 @@
             <select class="form-control" name="role" required>
               <option value="">---</option>
               <option value="User">User</option>
-              <option value="Verificator">Verificator</option>
+              <option value="Kepala_Bidang">Verificator</option>
               <option value="Driver">Driver</option>
               <option value="Cost Manager">Cost Manager</option>
             </select>
