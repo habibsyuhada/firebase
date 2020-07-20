@@ -84,6 +84,11 @@
 		var storage = firebase.storage();
 		var storageRef = firebase.storage().ref();
 	</script>
+	<style>
+		.shadow{
+			box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important
+		}
+	</style>
 </head>
 
 <body>
