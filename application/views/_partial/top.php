@@ -42,6 +42,7 @@
 									<li><a href="<?php echo base_url() ?>department/department_new">Add New Department</a></li>
 								</ul>
 							</li>
+							<li class="active"><a href="<?php echo base_url() ?>Order"><i class="fa fa-history"></i><span>History</span></a></li>
 						</ul>
 					</nav>
 				</div>

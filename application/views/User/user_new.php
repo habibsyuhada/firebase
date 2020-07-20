@@ -17,7 +17,13 @@
           </div>
           <div class="form-group">
             <label class="col-form-label">Role</label>
-            <input class="form-control" type="text" name="role" placeholder="---" required>
+            <select class="form-control" name="role" required>
+              <option value="">---</option>
+              <option value="User">User</option>
+              <option value="Kepala_Bidang">Verificator</option>
+              <option value="Driver">Driver</option>
+              <option value="Cost Manager">Cost Manager</option>
+            </select>
           </div>
           <div class="form-group">
             <label class="col-form-label">Department</label>
@@ -38,7 +44,7 @@
     var data = {
     	Name : $("input[name=name]").val(),
     	Email : $("input[name=email]").val(),
-    	Role : $("input[name=role]").val(),
+    	Role : $("select[name=role]").val(),
     	Department : $("input[name=department]").val(),
       Password : '123456',
     }
@@ -85,7 +91,7 @@
         var data = doc.data();
         $("input[name=name]").val(data.Nama);
         $("input[name=email]").val(data.Email);
-        $("input[name=role]").val(data.Role);
+        $("select[name=role]").val(data.Role);
         $("input[name=department]").val(data.Departemen);
         $('#loading_firebase').hide();
 
@@ -101,9 +107,9 @@
       e.preventDefault();
       sweetalert('loading', 'Please Wait...');
       var data = {
-        Name : $("input[name=name]").val(),
+        Nama : $("input[name=name]").val(),
         // Email : $("input[name=email]").val(),
-        Role : $("input[name=role]").val(),
+        Role : $("select[name=role]").val(),
         Departemen : $("input[name=department]").val(),
       }
       docRef = db.collection("Users").doc("<?php echo $id; ?>");
