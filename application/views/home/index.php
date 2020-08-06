@@ -166,11 +166,20 @@
       });
       gabung_data('users',json_all);
     });
+    db.collection("Car")
+    .onSnapshot(function(querySnapshot) {
+    	var json_all = [];
+      querySnapshot.forEach(function(doc) {
+        json_all[doc.id] = doc.data()
+      });
+      gabung_data('car',json_all);
+    });
 	}
 
   var json_travel = [];
   var json_request = [];
   var json_users = [];
+  var json_car = [];
   var kosong = 0;
   function gabung_data(nama_var, data) {
     if(nama_var == 'travel'){
@@ -188,6 +197,9 @@
     else if(nama_var == 'users'){
       json_users = data;
     }
+    else if(nama_var == 'car'){
+      json_car = data;
+    }
     console.log(nama_var);
     console.log(data);
     if((Object.keys(json_travel).length > 0 || kosong == 1) && Object.keys(json_request).length > 0 && Object.keys(json_users).length > 0){
@@ -196,7 +208,7 @@
       var json_travel_key = Object.keys(json_travel);
       json_travel_key.forEach(function(key) {
         var action = "<button type='button' class='btn btn-sm btn-secondary' onclick='open_detail(this)' data-key='"+key+"'><i class='fa fa-info'></i>&nbsp;Detail</button>";
-        var json_arr = [no, json_request[json_travel[key].Request_id].Nama || "", json_users[json_request[json_travel[key].Request_id].driverId].Nama || json_request[json_travel[key].Request_id].driverId, "Not Found" || "", json_travel[key].Mulai || "", action];
+        var json_arr = [no, json_request[json_travel[key].Request_id].Nama || "", json_users[json_request[json_travel[key].Request_id].driverId].Nama || "", json_car[json_travel[key].CarId].no_polisi || "", json_travel[key].Mulai || "", action];
         json_onprogress_order.push(json_arr);
         no++;
       });
