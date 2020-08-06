@@ -207,7 +207,7 @@
       var no = 1;
       var json_travel_key = Object.keys(json_travel);
       json_travel_key.forEach(function(key) {
-        var action = "<button type='button' class='btn btn-sm btn-secondary' onclick='open_detail(this)' data-key='"+key+"'><i class='fa fa-info'></i>&nbsp;Detail</button>";
+        var action = "<button type='button' class='btn btn-sm btn-secondary' onclick='open_detail(this)' data-key='"+key+"'>Detail</button>";
         var json_arr = [no, json_request[json_travel[key].Request_id].Nama || "", json_users[json_request[json_travel[key].Request_id].driverId].Nama || "", json_car[json_travel[key].CarId].no_polisi || "", json_travel[key].Mulai || "", action];
         json_onprogress_order.push(json_arr);
         no++;
