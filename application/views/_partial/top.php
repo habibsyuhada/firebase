@@ -21,6 +21,7 @@
 					<nav>
 						<ul class="metismenu" id="menu">
 							<li class="active"><a href="<?php echo base_url() ?>"><i class="fa fa-home"></i><span>Dashboard</span></a></li>
+							<li class="active"><a href="<?php echo base_url() ?>Order"><i class="fa fa-history"></i><span>Request</span></a></li>
 							<li class="active">
 								<a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-users"></i><span>User Management</span></a>
 								<ul class="collapse in">
@@ -42,7 +43,6 @@
 									<li><a href="<?php echo base_url() ?>department/department_new">Add New Department</a></li>
 								</ul>
 							</li>
-							<li class="active"><a href="<?php echo base_url() ?>Order"><i class="fa fa-history"></i><span>History</span></a></li>
 						</ul>
 					</nav>
 				</div>
