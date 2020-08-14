@@ -174,12 +174,30 @@
       });
       gabung_data('car',json_all);
     });
+    db.collection("Biaya")
+    .onSnapshot(function(querySnapshot) {
+    	var json_all = [];
+      querySnapshot.forEach(function(doc) {
+        json_all[doc.id] = doc.data()
+      });
+      gabung_data('biaya',json_all);
+    });
+    db.collection("Service")
+    .onSnapshot(function(querySnapshot) {
+    	var json_all = [];
+      querySnapshot.forEach(function(doc) {
+        json_all[doc.id] = doc.data()
+      });
+      gabung_data('service',json_all);
+    });
 	}
 
   var json_travel = [];
   var json_request = [];
   var json_users = [];
   var json_car = [];
+  var json_biaya = [];
+  var json_service = [];
   var kosong = 0;
   function gabung_data(nama_var, data) {
     if(nama_var == 'travel'){
@@ -200,26 +218,49 @@
     else if(nama_var == 'car'){
       json_car = data;
     }
-    console.log(nama_var);
-    console.log(data);
-    if((Object.keys(json_travel).length > 0 || kosong == 1) && Object.keys(json_request).length > 0 && Object.keys(json_users).length > 0){
-      var json_onprogress_order = [];
-      var no = 1;
-      var json_travel_key = Object.keys(json_travel);
-      json_travel_key.forEach(function(key) {
-        var action = "<button type='button' class='btn btn-sm btn-secondary' onclick='open_detail(this)' data-key='"+key+"'>Detail</button>";
-        var json_arr = [no, json_request[json_travel[key].Request_id].Nama || "", json_users[json_request[json_travel[key].Request_id].driverId].Nama || "", json_car[json_travel[key].CarId].no_polisi || "", json_travel[key].Mulai || "", action];
-        json_onprogress_order.push(json_arr);
-        no++;
+    else if(nama_var == 'biaya'){
+      json_biaya = data;
+    }
+    else if(nama_var == 'service'){
+      json_service = data;
+    }
+    if(nama_var == 'biaya' || nama_var == 'service'){
+      var actual = 0;
+      var d = new Date();
+      var json_biaya_key = Object.keys(json_biaya);
+      json_biaya_key.forEach(function(key) {
+        actual = actual + parseInt(json_biaya[key].Angin) + parseInt(json_biaya[key].Bensin) + parseInt(json_biaya[key].Lain) + parseInt(json_biaya[key].Parkir);
       });
-      // console.log(json_onprogress_order);
-      $('.datatables').DataTable().clear().destroy();
-      $('.datatables').DataTable({
-        responsive: true,
-        data: json_onprogress_order,
-        order:[]
-      }).draw();
-      $('#loading_onprogress_order').hide();
+      console.log(actual);
+      var json_service_key = Object.keys(json_service);
+      json_service_key.forEach(function(key) {
+        var date_service = json_service[key].Service_Month;
+        var month_service = date_service.split("-");
+        if((parseInt(month_service[1]) - 1) == d.getMonth()){
+          actual = actual + parseInt(json_service[key].Service_Price);
+        }
+      });
+      console.log(actual);
+    }
+    else{
+      if((Object.keys(json_travel).length > 0 || kosong == 1) && Object.keys(json_request).length > 0 && Object.keys(json_users).length > 0){
+        var json_onprogress_order = [];
+        var no = 1;
+        var json_travel_key = Object.keys(json_travel);
+        json_travel_key.forEach(function(key) {
+          var action = "<button type='button' class='btn btn-sm btn-secondary' onclick='open_detail(this)' data-key='"+key+"'>Detail</button>";
+          var json_arr = [no, json_request[json_travel[key].Request_id].Nama || "", json_users[json_request[json_travel[key].Request_id].driverId].Nama || "", (json_travel[key].hasOwnProperty('CarId') ? json_car[json_travel[key].CarId].no_polisi : "") || "", json_travel[key].Mulai || "", action];
+          json_onprogress_order.push(json_arr);
+          no++;
+        });
+        $('.datatables').DataTable().clear().destroy();
+        $('.datatables').DataTable({
+          responsive: true,
+          data: json_onprogress_order,
+          order:[]
+        }).draw();
+        $('#loading_onprogress_order').hide();
+      }
     }
   }
 
