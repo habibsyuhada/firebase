@@ -70,7 +70,10 @@
   <div class="row my-4">
     <div class="col-xl-6 col-md-6">
     	<div class="bg-white text-center p-3 shadow">
-    		<canvas id="budgetvsactualChart"></canvas>
+        <canvas id="budgetvsactualChart"></canvas>
+        <div>
+          <a href="<?php echo base_url() ?>budget/budget_list" class="btn btn-sm btn-primary">Update Budget</a>
+        </div>
     	</div>
     </div>
     <div class="col-xl-6 col-md-6">
@@ -174,6 +177,14 @@
       });
       gabung_data('car',json_all);
     });
+    db.collection("Budget")
+    .onSnapshot(function(querySnapshot) {
+    	var json_all = [];
+      querySnapshot.forEach(function(doc) {
+        json_all[doc.data().month] = doc.data().total
+      });
+      gabung_data('budget',json_all);
+    });
     db.collection("Biaya")
     .onSnapshot(function(querySnapshot) {
     	var json_all = [];
@@ -198,6 +209,7 @@
   var json_car = [];
   var json_biaya = [];
   var json_service = [];
+  var json_budget = [];
   var kosong = 0;
   function gabung_data(nama_var, data) {
     if(nama_var == 'travel'){
@@ -224,7 +236,10 @@
     else if(nama_var == 'service'){
       json_service = data;
     }
-    if(nama_var == 'biaya' || nama_var == 'service'){
+    else if(nama_var == 'budget'){
+      json_budget = data;
+    }
+    if(nama_var == 'biaya' || nama_var == 'service'|| nama_var == 'budget'){
       var total_actual = 0;
       var total_bensin = 0;
       var total_angin = 0;
@@ -267,10 +282,13 @@
         }
       }
       create_dailyreportChart(total_actual_permonth);
-      create_budgetvsactualChart(total_actual);
+      var budget_now = 0;
+      if(!(typeof json_budget[(d.getMonth() + 1)] == 'undefined')){
+        budget_now = json_budget[(d.getMonth() + 1)];
+      }
+      create_budgetvsactualChart(budget_now, total_actual);
       var label_monthly = ["Bensin", "Sewa Kendaraan", "Uang Parkir", "Uang Isi Angin", "Service", "Lainnya"];
       var data_monthly = [total_bensin, 0, total_parkir, total_angin, total_service, total_lain];
-      console.log(total_actual_permonth);
       data_monthly.forEach(function (value, i) {
         if(parseInt(value) == 0){
           label_monthly.splice(i, 1);
@@ -435,7 +453,7 @@
 
 
   var budgetvsactualChart;
-  function create_budgetvsactualChart(total_actual) {
+  function create_budgetvsactualChart(budget, total_actual) {
     if (budgetvsactualChart != undefined || budgetvsactualChart !=null) {
       budgetvsactualChart.destroy();
     }
@@ -454,7 +472,7 @@
             backgroundColor: grd2,
             borderColor: "rgba(0, 123, 255, 1)",
             borderWidth: 1,
-            data: [0 , total_actual]
+            data: [budget , total_actual]
           }
         ]
       },

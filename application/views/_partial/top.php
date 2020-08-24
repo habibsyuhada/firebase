@@ -43,6 +43,13 @@
 									<li><a href="<?php echo base_url() ?>department/department_new">Add New Department</a></li>
 								</ul>
 							</li>
+							<li class="active">
+								<a href="javascript:void(0)" aria-expanded="true"><i class="fa fa-building"></i><span>Budget Management</span></a>
+								<ul class="collapse in">
+									<li><a href="<?php echo base_url() ?>budget/budget_list">Budget List</a></li>
+									<li><a href="<?php echo base_url() ?>budget/budget_new">Add New Budget</a></li>
+								</ul>
+							</li>
 						</ul>
 					</nav>
 				</div>
@@ -63,7 +70,7 @@
 						</div>
 						<div class="user-profile pull-right my-0">
 							<img class="avatar user-thumb" src="<?php echo base_url() ?>assets/images/author/avatar.png" alt="avatar">
-							<h4 class="user-name dropdown-toggle" data-toggle="dropdown">Habib Syuhada <i class="fa fa-angle-down"></i></h4>
+							<h4 class="user-name dropdown-toggle" data-toggle="dropdown">Admin SCI Batam <i class="fa fa-angle-down"></i></h4>
 							<div class="dropdown-menu">
 								<a class="dropdown-item" href="<?php echo base_url() ?>home/logout">Log Out</a>
 							</div>

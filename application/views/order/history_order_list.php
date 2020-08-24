@@ -176,15 +176,21 @@
       var json_onprogress_order = [];
       var json_request_key = Object.keys(json_request);
       json_request_key.forEach(function(key) {
+        var date_arr = json_request[key].Tanggal_Berangkat.split('-');
         var action = "<button type='button' class='btn btn-sm btn-secondary' onclick='open_detail(this)' data-key='"+key+"'>Detail</button>";
-        var json_arr = [json_request[key].Nama || "", json_request[key].Departemen || "", json_request[key].Proyek || "", json_request[key].Perjalanan || "", json_request[key].Alamat_Asal || "", json_request[key].Alamat_Tujuan || "", json_request[key].Tanggal_Berangkat || "", json_request[key].Status || "", action];
+        var json_arr = [json_request[key].Nama || "", json_request[key].Departemen || "", json_request[key].Proyek || "", json_request[key].Perjalanan || "", json_request[key].Alamat_Asal || "", json_request[key].Alamat_Tujuan || "", "<span class='d-none'>"+ date_arr[2] + date_arr[1] + date_arr[0] +"</span>" + json_request[key].Tanggal_Berangkat || "", json_request[key].Status || "", action];
         json_onprogress_order.push(json_arr);
       });
       $('.datatables').DataTable().clear().destroy();
       $('.datatables').DataTable({
         responsive: true,
         data: json_onprogress_order,
-        order:[]
+        order:[[ 6, "desc" ]],
+        dom: 'Bfrtip',
+        buttons: [
+          'excelHtml5',
+          'csvHtml5',
+        ]
       }).draw();
       $('#loading_firebase').hide();
     }
