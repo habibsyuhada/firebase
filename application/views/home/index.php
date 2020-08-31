@@ -72,7 +72,7 @@
     	<div class="bg-white text-center p-3 shadow">
         <canvas id="budgetvsactualChart"></canvas>
         <div>
-          <a href="<?php echo base_url() ?>budget/budget_list" class="btn btn-sm btn-primary">Update Budget</a>
+          <a href="<?php echo base_url() ?>budget/budget_list" class="btn btn-sm btn-primary">Update Anggaran</a>
         </div>
     	</div>
     </div>
@@ -263,25 +263,28 @@
         if((parseInt(month_service[1]) - 1) == d.getMonth()){
           total_actual = total_actual + parseInt(json_service[key].Service_Price);
           total_service = total_service + parseInt(json_service[key].Service_Price);
-        }
-        if(typeof total_actual_all[parseInt(month_service[1])] === 'undefined') {
-          total_actual_all[parseInt(month_service[1])] = parseInt(json_service[key].Service_Price);
-        }
-        else {
-          total_actual_all[parseInt(month_service[1])] = total_actual_all[parseInt(month_service[1])] + parseInt(json_service[key].Service_Price);
+          if(typeof total_actual_all[parseInt(month_service[0])] === 'undefined') {
+            total_actual_all[parseInt(month_service[0])] = parseInt(json_service[key].Service_Price);
+          }
+          else {
+            total_actual_all[parseInt(month_service[0])] = total_actual_all[parseInt(month_service[0])] + parseInt(json_service[key].Service_Price);
+          }
         }
       });
-      var total_actual_permonth = [];
-      for (let i = 0; i < total_actual_all.length; i++) {
-        total_actual_permonth[i] = total_actual_all[i];
+
+      var daysinmonth = new Date(2020, d.getMonth()+1, 0).getDate();
+      var total_actual_one_month = [];
+      for (let i = 1; i <= daysinmonth; i++) {
         if(typeof total_actual_all[i] === 'undefined') {
-          total_actual_permonth[i] = 0;
+          total_actual_one_month[i-1] = 0;
         }
         else {
-          total_actual_permonth[i] = total_actual_all[i];
+          total_actual_one_month[i-1] = total_actual_all[i];
         }
       }
-      create_dailyreportChart(total_actual_permonth);
+      
+      console.log(total_actual_one_month);
+      create_dailyreportChart(total_actual_one_month);
       var budget_now = 0;
       if(!(typeof json_budget[(d.getMonth() + 1)] == 'undefined')){
         budget_now = json_budget[(d.getMonth() + 1)];
@@ -304,9 +307,11 @@
         var json_travel_key = Object.keys(json_travel);
         json_travel_key.forEach(function(key) {
           var action = "<button type='button' class='btn btn-sm btn-secondary' onclick='open_detail(this)' data-key='"+key+"'>Detail</button>";
-          var json_arr = [no, json_request[json_travel[key].Request_id].Nama || "", json_users[json_request[json_travel[key].Request_id].driverId].Nama || "", (json_travel[key].hasOwnProperty('CarId') ? json_car[json_travel[key].CarId].no_polisi : "") || "", json_travel[key].Mulai || "", action];
-          json_onprogress_order.push(json_arr);
-          no++;
+          if(typeof json_request[json_travel[key].Request_id] !== 'undefined'){
+            var json_arr = [no, json_request[json_travel[key].Request_id].Nama || "", json_users[json_request[json_travel[key].Request_id].driverId].Nama || "", (json_travel[key].hasOwnProperty('CarId') ? json_car[json_travel[key].CarId].no_polisi : "") || "", json_travel[key].Mulai || "", action];
+            json_onprogress_order.push(json_arr);
+            no++;
+          }
         });
         $('.datatables').DataTable().clear().destroy();
         $('.datatables').DataTable({
@@ -361,24 +366,24 @@
   }
 	//https://coolors.co/d33f49-21fa90-0c090d-30bced-303036
 	<?php
-    $months = array(
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July ',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    );
-    $this_month = date("n") - 1;
+    // $months = array(
+    //   'January',
+    //   'February',
+    //   'March',
+    //   'April',
+    //   'May',
+    //   'June',
+    //   'July ',
+    //   'August',
+    //   'September',
+    //   'October',
+    //   'November',
+    //   'December',
+    // );
+    // $this_month = date("n") - 1;
 
-		for ($i=0; $i <= $this_month; $i++) { 
-      $date_pretty[] 		= $months[$i];
+		for ($i=1; $i <= date('t'); $i++) { 
+      $date_pretty[] 		= $i;
     }
 	?>
   var dailyreportChart;
@@ -408,7 +413,7 @@
         title: {
           display: true,
           fontSize: 22,
-          text: 'Daily Report'
+          text: 'Daily Report (<?php echo date("F") ?>)'
         },
         legend: {
           display: false
@@ -481,7 +486,7 @@
         title: {
           display: true,
           fontSize: 22,
-          text: 'Budget vs Actual'
+          text: 'Anggaran vs Realisasi'
         },
         tooltips: {
           displayColors: false,

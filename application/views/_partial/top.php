@@ -12,8 +12,8 @@
 		<!-- sidebar menu area start -->
 		<div class="sidebar-menu">
 			<div class="sidebar-header bg-white">
-				<div class="logo py-3">
-					<!-- <a href="#"><img src="<?php echo base_url() ?>assets/images/logo_sucofindo.png" alt="logo"></a> -->
+				<div class="logo py-3 text-nowrap text-left">
+					<a href="#" class="h3 font-weight-bold"><img src="<?php echo base_url() ?>assets/images/logo_sucofindo.png"  width="50px" alt="logo"> CAR-e Batam</a>
 				</div>
 			</div>
 			<div class="main-menu">
@@ -70,7 +70,7 @@
 						</div>
 						<div class="user-profile pull-right my-0">
 							<img class="avatar user-thumb" src="<?php echo base_url() ?>assets/images/author/avatar.png" alt="avatar">
-							<h4 class="user-name dropdown-toggle" data-toggle="dropdown">Admin SCI Batam <i class="fa fa-angle-down"></i></h4>
+							<h4 class="user-name dropdown-toggle" data-toggle="dropdown"><?php echo $this->session->userdata('nama') ?> <i class="fa fa-angle-down"></i></h4>
 							<div class="dropdown-menu">
 								<a class="dropdown-item" href="<?php echo base_url() ?>home/logout">Log Out</a>
 							</div>

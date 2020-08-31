@@ -52,6 +52,7 @@
       db.collection("Car").add({
         nama_mobil : $("input[name=nama_mobil]").val(),
         no_polisi : $("input[name=no_polisi]").val(),
+        status : "available",
         src_gambar : file.name,
       })
       .then(function() {
