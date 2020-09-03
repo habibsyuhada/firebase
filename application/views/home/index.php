@@ -32,6 +32,29 @@
     	</div>
     </div>
   </div>
+  <!-- <div class="row my-4">
+    <div class="col-12">
+    	<div class="bg-white p-3 shadow">
+    		<h3 class="font-weight-bold mb-2 text-center">In Progress Request</h3>
+    		<table class="table table-bordered text-center datatables">
+          <thead class="text-uppercase bg-primary">
+            <tr class="text-white">
+              <th>No.</th>
+              <th>Bidang</th>
+              <th>Total Time in a Month</th>
+              <th>Total Cost in a Month</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+        <div id="loading_onprogress_order">
+          <div class="loader my-4"></div>
+          <h5 class="text-center">Loading...</h5>
+        </div>
+    	</div>
+    </div>
+  </div> -->
   <div class="row my-4">
     <div class="col-12">
     	<div class="bg-white p-3 shadow">
@@ -144,9 +167,7 @@
     .onSnapshot(function(querySnapshot) {
     	var json_all = [];
       querySnapshot.forEach(function(doc) {
-        if(doc.data().hasOwnProperty('Berhenti') == false && doc.data().hasOwnProperty('Request_id') == true){
-          json_all[doc.id] = doc.data();
-        }
+        json_all[doc.id] = doc.data();
       });
       gabung_data('travel',json_all);
     });
@@ -155,9 +176,6 @@
     	var json_all = [];
       querySnapshot.forEach(function(doc) {
         json_all[doc.id] = doc.data();
-        if(doc.data().Status != 'End' || doc.data().Status != 'Cancel'){
-          json_all[doc.id] = doc.data();
-        }
       });
       gabung_data('request',json_all);
     });
@@ -239,7 +257,7 @@
     else if(nama_var == 'budget'){
       json_budget = data;
     }
-    if(nama_var == 'biaya' || nama_var == 'service'|| nama_var == 'budget'){
+    if((nama_var == 'biaya' || nama_var == 'service' || nama_var == 'budget') && Object.keys(json_request).length > 0 && Object.keys(json_travel).length > 0){
       var total_actual = 0;
       var total_bensin = 0;
       var total_angin = 0;
@@ -250,12 +268,26 @@
       var d = new Date();
       var json_biaya_key = Object.keys(json_biaya);
       json_biaya_key.forEach(function(key) {
-        total_actual = total_actual + parseInt(json_biaya[key].Angin) + parseInt(json_biaya[key].Bensin) + parseInt(json_biaya[key].Lain) + parseInt(json_biaya[key].Parkir);
-        total_bensin = total_bensin + parseInt(json_biaya[key].Bensin);
-        total_angin = total_angin + parseInt(json_biaya[key].Angin);
-        total_parkir = total_parkir + parseInt(json_biaya[key].Parkir);
-        total_lain = total_lain + parseInt(json_biaya[key].Lain);
+        var date_service = json_biaya[key].Tanggal;
+        var month_service = date_service.split("-");
+        if((parseInt(month_service[1]) - 1) == d.getMonth()){
+          var total_biaya_travel = parseInt(json_biaya[key].Angin) + parseInt(json_biaya[key].Bensin) + parseInt(json_biaya[key].Lain) + parseInt(json_biaya[key].Parkir);
+          total_actual = total_actual + parseInt(total_biaya_travel);
+          total_bensin = total_bensin + parseInt(json_biaya[key].Bensin);
+          total_angin = total_angin + parseInt(json_biaya[key].Angin);
+          total_parkir = total_parkir + parseInt(json_biaya[key].Parkir);
+          total_lain = total_lain + parseInt(json_biaya[key].Lain);
+          var nama_dept = json_request[json_travel[json_biaya[key].Travel_Id].Request_id].Departemen;
+          if(typeof(total_actual_all[nama_dept]) != 'undefined' && typeof(total_actual_all[nama_dept][parseInt(month_service[0])]) != 'undefined') {
+            total_actual_all[nama_dept][parseInt(month_service[0])] = total_actual_all[nama_dept][parseInt(month_service[0])] + parseInt(total_biaya_travel);
+          }
+          else {
+            total_actual_all[nama_dept] = [];
+            total_actual_all[nama_dept][parseInt(month_service[0])] = parseInt(total_biaya_travel);
+          }
+        }
       });
+      
       var json_service_key = Object.keys(json_service);
       json_service_key.forEach(function(key) {
         var date_service = json_service[key].Service_Month;
@@ -263,28 +295,61 @@
         if((parseInt(month_service[1]) - 1) == d.getMonth()){
           total_actual = total_actual + parseInt(json_service[key].Service_Price);
           total_service = total_service + parseInt(json_service[key].Service_Price);
-          if(typeof total_actual_all[parseInt(month_service[0])] === 'undefined') {
-            total_actual_all[parseInt(month_service[0])] = parseInt(json_service[key].Service_Price);
+          if(typeof(total_actual_all['Service']) != 'undefined' && typeof(total_actual_all['Service'][parseInt(month_service[0])]) != 'undefined') {
+            total_actual_all['Service'][parseInt(month_service[0])] = total_actual_all['Service'][parseInt(month_service[0])] + parseInt(json_service[key].Service_Price);
           }
           else {
-            total_actual_all[parseInt(month_service[0])] = total_actual_all[parseInt(month_service[0])] + parseInt(json_service[key].Service_Price);
+            total_actual_all['Service'] = [];
+            total_actual_all['Service'][parseInt(month_service[0])] = parseInt(json_service[key].Service_Price);
           }
         }
       });
 
       var daysinmonth = new Date(2020, d.getMonth()+1, 0).getDate();
-      var total_actual_one_month = [];
-      for (let i = 1; i <= daysinmonth; i++) {
-        if(typeof total_actual_all[i] === 'undefined') {
-          total_actual_one_month[i-1] = 0;
+      var dataset_chart_daily_dept = [];
+      var total_actual_key = Object.keys(total_actual_all);
+      var coolors = ["rgba(0, 123, 255, 1)", "rgba(40, 167, 69, 1)", "rgba(251, 54, 64, 1)", "rgba(247, 208, 2, 1)"];
+      var coolors_tr = ["rgba(0, 123, 255, 0.1)", "rgba(40, 167, 69, 0.1)", "rgba(251, 54, 64, 0.1)", "rgba(247, 208, 2, 0.1)"];
+      var no = 0;
+      total_actual_key.forEach(function(key) {
+        var total_actual_dept = [];
+        for (let i = 1; i <= daysinmonth; i++) {
+          if(typeof(total_actual_all[key]) != 'undefined' && typeof(total_actual_all[key][i]) != 'undefined') {
+            total_actual_dept[i-1] = total_actual_all[key][i];
+          }
+          else {
+            total_actual_dept[i-1] = 0;
+          }
         }
-        else {
-          total_actual_one_month[i-1] = total_actual_all[i];
+        var data_set = {
+          label: key,
+          borderColor: coolors[no],
+          backgroundColor: coolors_tr[no],
+          data: total_actual_dept,
+          lineTension: 0,
+          fill: true
         }
-      }
-      
-      console.log(total_actual_one_month);
-      create_dailyreportChart(total_actual_one_month);
+        dataset_chart_daily_dept.push(data_set);
+        no++;
+      });
+      // for (let i = 1; i <= daysinmonth; i++) {
+      //   if(typeof total_actual_all['Service'][i] === 'undefined') {
+      //     total_actual_one_month[i-1] = 0;
+      //   }
+      //   else {
+      //     total_actual_one_month[i-1] = total_actual_all['Service'][i];
+      //   }
+      // }
+      // datasets: [{
+      //   label: 'Actual Cost',
+      //   borderColor: 'rgba(0, 123, 255, 1)',
+      //   backgroundColor: 'rgba(0, 123, 255, 0.1)',
+      //   data: data_data,
+      //   lineTension: 0,
+      //   fill: true
+      // },],
+      create_dailyreportChart(dataset_chart_daily_dept);
+
       var budget_now = 0;
       if(!(typeof json_budget[(d.getMonth() + 1)] == 'undefined')){
         budget_now = json_budget[(d.getMonth() + 1)];
@@ -301,16 +366,19 @@
       create_montlycostChart(label_monthly, data_monthly);
     }
     else{
-      if((Object.keys(json_travel).length > 0 || kosong == 1) && Object.keys(json_request).length > 0 && Object.keys(json_users).length > 0){
+      if((Object.keys(json_travel).length > 0 || kosong == 1) && Object.keys(json_request).length > 0 && Object.keys(json_users).length > 0 && Object.keys(json_car).length > 0){
         var json_onprogress_order = [];
         var no = 1;
         var json_travel_key = Object.keys(json_travel);
         json_travel_key.forEach(function(key) {
-          var action = "<button type='button' class='btn btn-sm btn-secondary' onclick='open_detail(this)' data-key='"+key+"'>Detail</button>";
-          if(typeof json_request[json_travel[key].Request_id] !== 'undefined'){
-            var json_arr = [no, json_request[json_travel[key].Request_id].Nama || "", json_users[json_request[json_travel[key].Request_id].driverId].Nama || "", (json_travel[key].hasOwnProperty('CarId') ? json_car[json_travel[key].CarId].no_polisi : "") || "", json_travel[key].Mulai || "", action];
-            json_onprogress_order.push(json_arr);
-            no++;
+          if(json_travel[key].hasOwnProperty('Berhenti') == false && json_travel[key].hasOwnProperty('Request_id') == true){
+            var action = "<button type='button' class='btn btn-sm btn-secondary' onclick='open_detail(this)' data-key='"+key+"'>Detail</button>";
+            if(typeof json_request[json_travel[key].Request_id] !== 'undefined'){
+      
+              var json_arr = [no, json_request[json_travel[key].Request_id].Nama || "", json_users[json_request[json_travel[key].Request_id].driverId].Nama || "", (json_travel[key].hasOwnProperty('CarId') ? json_car[json_travel[key].CarId].no_polisi : "") || "", json_travel[key].Mulai || "", action];
+              json_onprogress_order.push(json_arr);
+              no++;
+            }
           }
         });
         $('.datatables').DataTable().clear().destroy();
@@ -329,18 +397,20 @@
       var request_all = 0;
       var json_request_key = Object.keys(json_request);
       json_request_key.forEach(function(key) {
-        if(json_request[key].Tanggal_Berangkat == "<?php echo date('d-m-Y'); ?>"){
-          request_today++;
+        if(json_request[key].Status != 'Cancel'){
+          if(json_request[key].Tanggal_Berangkat == "<?php echo date('d-m-Y'); ?>"){
+            request_today++;
+          }
+          var date_request = json_request[key].Tanggal_Berangkat;
+          var date_request_arr = date_request.split("-");
+          if(date_request_arr[1]+"-"+date_request_arr[2] == "<?php echo date('m-Y'); ?>"){
+            request_month++;
+          }
+          if(date_request_arr[2] == "<?php echo date('Y'); ?>"){
+            request_year++;
+          }
+          request_all++;
         }
-        var date_request = json_request[key].Tanggal_Berangkat;
-        var date_request_arr = date_request.split("-");
-        if(date_request_arr[1]+"-"+date_request_arr[2] == "<?php echo date('m-Y'); ?>"){
-          request_month++;
-        }
-        if(date_request_arr[2] == "<?php echo date('Y'); ?>"){
-          request_year++;
-        }
-        request_all++;
       });
       $(".total-request-today").html(request_today);
       $(".total-request-month").html(request_month);
@@ -398,14 +468,15 @@
       // The data for our dataset
       data: {
         labels: ['<?php echo join("', '", $date_pretty) ?>'],
-        datasets: [{
-          label: 'Actual Cost',
-          borderColor: 'rgba(0, 123, 255, 1)',
-          backgroundColor: 'rgba(0, 123, 255, 0.1)',
-          data: data_data,
-          lineTension: 0,
-          fill: true
-        },],
+        // datasets: [{
+        //   label: 'Actual Cost',
+        //   borderColor: 'rgba(0, 123, 255, 1)',
+        //   backgroundColor: 'rgba(0, 123, 255, 0.1)',
+        //   data: data_data,
+        //   lineTension: 0,
+        //   fill: true
+        // },],
+        datasets: data_data,
       },
 
       // Configuration options go here
@@ -416,11 +487,16 @@
           text: 'Daily Report (<?php echo date("F") ?>)'
         },
         legend: {
-          display: false
+          display: true
         },
         tooltips: {
           displayColors: false,
           callbacks: {
+              title: function(tooltipItems, data) {
+                //Return value for title
+                // return tooltipItems.xLabel;
+                return data.datasets[tooltipItems[0].datasetIndex].label;
+              },
               label: function (tooltipItems, data) {
                   return 'Actual Cost: Rp. ' + tooltipItems.yLabel;
               }
