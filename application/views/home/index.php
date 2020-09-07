@@ -32,34 +32,35 @@
     	</div>
     </div>
   </div>
-  <!-- <div class="row my-4">
+  <div class="row my-4">
     <div class="col-12">
     	<div class="bg-white p-3 shadow">
     		<h3 class="font-weight-bold mb-2 text-center">In Progress Request</h3>
-    		<table class="table table-bordered text-center datatables">
+    		<table class="table table-bordered text-center datatables tbl-daily-chart">
           <thead class="text-uppercase bg-primary">
             <tr class="text-white">
               <th>No.</th>
               <th>Bidang</th>
-              <th>Total Time in a Month</th>
-              <th>Total Cost in a Month</th>
+              <th>Date</th>
+              <th>Total Time</th>
+              <th>Total Cost</th>
             </tr>
           </thead>
           <tbody>
           </tbody>
         </table>
-        <div id="loading_onprogress_order">
+        <div id="loading_daily_table">
           <div class="loader my-4"></div>
           <h5 class="text-center">Loading...</h5>
         </div>
     	</div>
     </div>
-  </div> -->
+  </div>
   <div class="row my-4">
     <div class="col-12">
     	<div class="bg-white p-3 shadow">
     		<h3 class="font-weight-bold mb-2 text-center">In Progress Request</h3>
-    		<table class="table table-bordered text-center datatables">
+    		<table class="table table-bordered text-center datatables tbl-in-progress-request">
           <thead class="text-uppercase bg-primary">
             <tr class="text-white">
               <th>No.</th>
@@ -265,8 +266,10 @@
       var total_lain = 0;
       var total_service = 0;
       var total_actual_all = [];
+      var data_table_daily_chart = [];
       var d = new Date();
       var json_biaya_key = Object.keys(json_biaya);
+      var no_row = 1;
       json_biaya_key.forEach(function(key) {
         var date_service = json_biaya[key].Tanggal;
         var month_service = date_service.split("-");
@@ -280,42 +283,68 @@
           var nama_dept = json_request[json_travel[json_biaya[key].Travel_Id].Request_id].Departemen;
           if(typeof(total_actual_all[nama_dept]) != 'undefined' && typeof(total_actual_all[nama_dept][parseInt(month_service[0])]) != 'undefined') {
             total_actual_all[nama_dept][parseInt(month_service[0])] = total_actual_all[nama_dept][parseInt(month_service[0])] + parseInt(total_biaya_travel);
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][4]+ parseInt(total_biaya_travel);
           }
           else {
             total_actual_all[nama_dept] = [];
             total_actual_all[nama_dept][parseInt(month_service[0])] = parseInt(total_biaya_travel);
+            data_table_daily_chart[nama_dept] = [];
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])] = [];
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][0] = no_row;
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][1] = nama_dept;
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][2] = "<span class='d-none'>"+ month_service[2] + month_service[1] + month_service[0] +"</span>" + date_service;
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = "-";
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = parseInt(total_biaya_travel);
+            no_row++;
           }
         }
       });
       
       var json_service_key = Object.keys(json_service);
       json_service_key.forEach(function(key) {
+        var nama_dept = "Service";
         var date_service = json_service[key].Service_Month;
         var month_service = date_service.split("-");
         if((parseInt(month_service[1]) - 1) == d.getMonth()){
           total_actual = total_actual + parseInt(json_service[key].Service_Price);
           total_service = total_service + parseInt(json_service[key].Service_Price);
-          if(typeof(total_actual_all['Service']) != 'undefined' && typeof(total_actual_all['Service'][parseInt(month_service[0])]) != 'undefined') {
-            total_actual_all['Service'][parseInt(month_service[0])] = total_actual_all['Service'][parseInt(month_service[0])] + parseInt(json_service[key].Service_Price);
+          if(typeof(total_actual_all[nama_dept]) != 'undefined' && typeof(total_actual_all[nama_dept][parseInt(month_service[0])]) != 'undefined') {
+            total_actual_all[nama_dept][parseInt(month_service[0])] = total_actual_all[nama_dept][parseInt(month_service[0])] + parseInt(json_service[key].Service_Price);
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][4]+ parseInt(total_biaya_travel);
           }
           else {
-            total_actual_all['Service'] = [];
-            total_actual_all['Service'][parseInt(month_service[0])] = parseInt(json_service[key].Service_Price);
+            total_actual_all[nama_dept] = [];
+            total_actual_all[nama_dept][parseInt(month_service[0])] = parseInt(json_service[key].Service_Price);
+            data_table_daily_chart[nama_dept] = [];
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])] = [];
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][0] = no_row;
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][1] = nama_dept;
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][2] = "<span class='d-none'>"+ month_service[2] + month_service[1] + month_service[0] +"</span>" + date_service;
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = "-";
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = parseInt(total_biaya_travel);
+            no_row++;
           }
         }
       });
 
       var daysinmonth = new Date(2020, d.getMonth()+1, 0).getDate();
       var dataset_chart_daily_dept = [];
+      var dataset_table_daily_chart = [];
       var total_actual_key = Object.keys(total_actual_all);
       var coolors = ["rgba(0, 123, 255, 1)", "rgba(40, 167, 69, 1)", "rgba(251, 54, 64, 1)", "rgba(247, 208, 2, 1)"];
       var coolors_tr = ["rgba(0, 123, 255, 0.1)", "rgba(40, 167, 69, 0.1)", "rgba(251, 54, 64, 0.1)", "rgba(247, 208, 2, 0.1)"];
       var no = 0;
+      no_row = 1;
       total_actual_key.forEach(function(key) {
         var total_actual_dept = [];
         for (let i = 1; i <= daysinmonth; i++) {
           if(typeof(total_actual_all[key]) != 'undefined' && typeof(total_actual_all[key][i]) != 'undefined') {
             total_actual_dept[i-1] = total_actual_all[key][i];
+      
+            var temp_data = [no_row, data_table_daily_chart[key][i][1], data_table_daily_chart[key][i][2], data_table_daily_chart[key][i][3], data_table_daily_chart[key][i][4]];
+            dataset_table_daily_chart.push(temp_data);
+            console.log(dataset_table_daily_chart);
+            no_row++;
           }
           else {
             total_actual_dept[i-1] = 0;
@@ -332,23 +361,16 @@
         dataset_chart_daily_dept.push(data_set);
         no++;
       });
-      // for (let i = 1; i <= daysinmonth; i++) {
-      //   if(typeof total_actual_all['Service'][i] === 'undefined') {
-      //     total_actual_one_month[i-1] = 0;
-      //   }
-      //   else {
-      //     total_actual_one_month[i-1] = total_actual_all['Service'][i];
-      //   }
-      // }
-      // datasets: [{
-      //   label: 'Actual Cost',
-      //   borderColor: 'rgba(0, 123, 255, 1)',
-      //   backgroundColor: 'rgba(0, 123, 255, 0.1)',
-      //   data: data_data,
-      //   lineTension: 0,
-      //   fill: true
-      // },],
       create_dailyreportChart(dataset_chart_daily_dept);
+
+      // console.log(data_table_daily_chart);
+      $('.datatables.tbl-daily-chart').DataTable().clear().destroy();
+      $('.datatables.tbl-daily-chart').DataTable({
+        responsive: true,
+        data: dataset_table_daily_chart,
+        order:[]
+      }).draw();
+      $('#loading_daily_table').hide();
 
       var budget_now = 0;
       if(!(typeof json_budget[(d.getMonth() + 1)] == 'undefined')){
@@ -381,8 +403,8 @@
             }
           }
         });
-        $('.datatables').DataTable().clear().destroy();
-        $('.datatables').DataTable({
+        $('.datatables.tbl-in-progress-request').DataTable().clear().destroy();
+        $('.datatables.tbl-in-progress-request').DataTable({
           responsive: true,
           data: json_onprogress_order,
           order:[]
