@@ -178,7 +178,7 @@
       json_request_key.forEach(function(key) {
         var date_arr = json_request[key].Tanggal_Berangkat.split('-');
         var action = "<button type='button' class='btn btn-sm btn-secondary' onclick='open_detail(this)' data-key='"+key+"'>Detail</button>";
-        var json_arr = [json_request[key].Nama || "", json_request[key].Departemen || "", json_request[key].Proyek || "", json_request[key].Perjalanan || "", json_request[key].Alamat_Asal || "", json_request[key].Alamat_Tujuan || "", "<span class='d-none'>"+ date_arr[2] + date_arr[1] + date_arr[0] +"</span>" + json_request[key].Tanggal_Berangkat || "", json_request[key].Status || "", action];
+        var json_arr = [json_request[key].Nama || "", json_request[key].Departemen || "", json_request[key].Proyek || "", json_request[key].Perjalanan || "", json_request[key].Alamat_Asal || "", json_request[key].Alamat_Tujuan || "", date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0] || "", json_request[key].Status || "", action];
         json_onprogress_order.push(json_arr);
       });
       $('.datatables').DataTable().clear().destroy();
@@ -204,7 +204,8 @@
     $("label[name=Proyek]").text(json_request[key].Proyek);
     $("label[name=Alamat_Asal]").text(json_request[key].Alamat_Asal);
     $("label[name=Alamat_Tujuan]").text(json_request[key].Alamat_Tujuan);
-    $("label[name=Tanggal_Berangkat]").text(json_request[key].Tanggal_Berangkat);
+    var date_arr = json_request[key].Tanggal_Berangkat.split('-');
+    $("label[name=Tanggal_Berangkat]").text(date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0]);
     $("label[name=Status]").text(json_request[key].Status);
     var table_travel = "";
     var no = 1;

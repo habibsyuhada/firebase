@@ -35,7 +35,7 @@
   <div class="row my-4">
     <div class="col-12">
     	<div class="bg-white p-3 shadow">
-    		<h3 class="font-weight-bold mb-2 text-center">In Progress Request</h3>
+    		<h3 class="font-weight-bold mb-2 text-center">Daily Report (<?php echo date("F") ?>)</h3>
     		<table class="table table-bordered text-center datatables tbl-daily-chart">
           <thead class="text-uppercase bg-primary">
             <tr class="text-white">
@@ -265,8 +265,8 @@
       var total_parkir = 0;
       var total_lain = 0;
       var total_service = 0;
-      var total_actual_all = [];
-      var data_table_daily_chart = [];
+      var total_actual_all = {};
+      var data_table_daily_chart = {};
       var d = new Date();
       var json_biaya_key = Object.keys(json_biaya);
       var no_row = 1;
@@ -281,19 +281,33 @@
           total_parkir = total_parkir + parseInt(json_biaya[key].Parkir);
           total_lain = total_lain + parseInt(json_biaya[key].Lain);
           var nama_dept = json_request[json_travel[json_biaya[key].Travel_Id].Request_id].Departemen;
+          if(typeof(total_actual_all[nama_dept]) == 'undefined'){
+            total_actual_all[nama_dept] = {};
+            data_table_daily_chart[nama_dept] = {};
+          }
           if(typeof(total_actual_all[nama_dept]) != 'undefined' && typeof(total_actual_all[nama_dept][parseInt(month_service[0])]) != 'undefined') {
             total_actual_all[nama_dept][parseInt(month_service[0])] = total_actual_all[nama_dept][parseInt(month_service[0])] + parseInt(total_biaya_travel);
+            
+            if(json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+              var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
+              var time_arr = time.split(":");
+              var total_time_sec = (time_arr[0]*3600) + (time_arr[1]*60)+ (time_arr[2])
+            }
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][3]+ parseInt(total_time_sec);
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][4]+ parseInt(total_biaya_travel);
           }
           else {
-            total_actual_all[nama_dept] = [];
             total_actual_all[nama_dept][parseInt(month_service[0])] = parseInt(total_biaya_travel);
-            data_table_daily_chart[nama_dept] = [];
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])] = [];
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])] = {};
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][0] = no_row;
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][1] = nama_dept;
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][2] = "<span class='d-none'>"+ month_service[2] + month_service[1] + month_service[0] +"</span>" + date_service;
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = "-";
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][2] = month_service[2] + "-" + month_service[1] + "-" + month_service[0];
+            if(json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+              var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
+              var time_arr = time.split(":");
+              var total_time_sec = (parseInt(time_arr[0])*3600) + (parseInt(time_arr[1])*60)+ (parseInt(time_arr[2]))
+            }
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = parseInt(total_time_sec);
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = parseInt(total_biaya_travel);
             no_row++;
           }
@@ -308,19 +322,32 @@
         if((parseInt(month_service[1]) - 1) == d.getMonth()){
           total_actual = total_actual + parseInt(json_service[key].Service_Price);
           total_service = total_service + parseInt(json_service[key].Service_Price);
+          if(typeof(total_actual_all[nama_dept]) == 'undefined'){
+            total_actual_all[nama_dept] = {};
+            data_table_daily_chart[nama_dept] = {};
+          }
           if(typeof(total_actual_all[nama_dept]) != 'undefined' && typeof(total_actual_all[nama_dept][parseInt(month_service[0])]) != 'undefined') {
             total_actual_all[nama_dept][parseInt(month_service[0])] = total_actual_all[nama_dept][parseInt(month_service[0])] + parseInt(json_service[key].Service_Price);
+            if(json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+              var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
+              var time_arr = time.split(":");
+              var total_time_sec = (time_arr[0]*3600) + (time_arr[1]*60)+ (time_arr[2])
+            }
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][3]+ parseInt(total_time_sec);
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][4]+ parseInt(total_biaya_travel);
           }
           else {
-            total_actual_all[nama_dept] = [];
             total_actual_all[nama_dept][parseInt(month_service[0])] = parseInt(json_service[key].Service_Price);
-            data_table_daily_chart[nama_dept] = [];
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])] = [];
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])] = {};
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][0] = no_row;
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][1] = nama_dept;
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][2] = "<span class='d-none'>"+ month_service[2] + month_service[1] + month_service[0] +"</span>" + date_service;
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = "-";
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][2] = month_service[2] + "-" + month_service[1] + "-" + month_service[0];
+            if(json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+              var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
+              var time_arr = time.split(":");
+              var total_time_sec = (parseInt(time_arr[0])*3600) + (parseInt(time_arr[1])*60)+ (parseInt(time_arr[2]))
+            }
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = parseInt(total_time_sec);
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = parseInt(total_biaya_travel);
             no_row++;
           }
@@ -340,10 +367,10 @@
         for (let i = 1; i <= daysinmonth; i++) {
           if(typeof(total_actual_all[key]) != 'undefined' && typeof(total_actual_all[key][i]) != 'undefined') {
             total_actual_dept[i-1] = total_actual_all[key][i];
-      
-            var temp_data = [no_row, data_table_daily_chart[key][i][1], data_table_daily_chart[key][i][2], data_table_daily_chart[key][i][3], data_table_daily_chart[key][i][4]];
+            var temp_sec = data_table_daily_chart[key][i][3];
+            var temp_time = [pad(Math.floor(temp_sec/3600)), pad(Math.floor(temp_sec/60)%60), pad(temp_sec%60), ].join(":");
+            var temp_data = [no_row, data_table_daily_chart[key][i][1], data_table_daily_chart[key][i][2], temp_time, data_table_daily_chart[key][i][4]];
             dataset_table_daily_chart.push(temp_data);
-            console.log(dataset_table_daily_chart);
             no_row++;
           }
           else {
@@ -363,12 +390,16 @@
       });
       create_dailyreportChart(dataset_chart_daily_dept);
 
-      // console.log(data_table_daily_chart);
       $('.datatables.tbl-daily-chart').DataTable().clear().destroy();
       $('.datatables.tbl-daily-chart').DataTable({
         responsive: true,
         data: dataset_table_daily_chart,
-        order:[]
+        order:[],
+        dom: 'Bfrtip',
+        buttons: [
+          'excelHtml5',
+          'csvHtml5',
+        ]
       }).draw();
       $('#loading_daily_table').hide();
 
@@ -700,5 +731,11 @@
     });
   }
   
-
+  function pad(num) {
+    if(num < 10) {
+      return "0" + num;
+    } else {
+      return "" + num;
+    }
+  }
 </script>
