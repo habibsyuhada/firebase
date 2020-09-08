@@ -547,11 +547,13 @@
           callbacks: {
               title: function(tooltipItems, data) {
                 //Return value for title
-                // return tooltipItems.xLabel;
-                return data.datasets[tooltipItems[0].datasetIndex].label;
+                return "Total Cost Actual";
+                // return data.datasets[tooltipItems[0].datasetIndex].label;
               },
               label: function (tooltipItems, data) {
-                  return 'Actual Cost: Rp. ' + tooltipItems.yLabel;
+                console.log(tooltipItems.datasetIndex);
+                console.log(data.datasets);
+                return data.datasets[tooltipItems.datasetIndex].label+': Rp. ' + tooltipItems.yLabel;
               }
           }
         },
