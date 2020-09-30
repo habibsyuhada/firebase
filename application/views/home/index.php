@@ -280,18 +280,23 @@
           total_angin = total_angin + parseInt(json_biaya[key].Angin);
           total_parkir = total_parkir + parseInt(json_biaya[key].Parkir);
           total_lain = total_lain + parseInt(json_biaya[key].Lain);
-          var nama_dept = json_request[json_travel[json_biaya[key].Travel_Id].Request_id].Departemen;
+          if(json_biaya[key].Travel_Id === "null"){
+            var nama_dept = "Service";
+          }
+          else{
+            var nama_dept = json_request[json_travel[json_biaya[key].Travel_Id].Request_id].Departemen;
+          }
           if(typeof(total_actual_all[nama_dept]) == 'undefined'){
             total_actual_all[nama_dept] = {};
             data_table_daily_chart[nama_dept] = {};
           }
           if(typeof(total_actual_all[nama_dept]) != 'undefined' && typeof(total_actual_all[nama_dept][parseInt(month_service[0])]) != 'undefined') {
             total_actual_all[nama_dept][parseInt(month_service[0])] = total_actual_all[nama_dept][parseInt(month_service[0])] + parseInt(total_biaya_travel);
-            
-            if(json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+            var total_time_sec = '00:00:00';
+            if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
               var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
               var time_arr = time.split(":");
-              var total_time_sec = (time_arr[0]*3600) + (time_arr[1]*60)+ (time_arr[2])
+              total_time_sec = (time_arr[0]*3600) + (time_arr[1]*60)+ (time_arr[2])
             }
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][3]+ parseInt(total_time_sec);
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][4]+ parseInt(total_biaya_travel);
@@ -302,10 +307,11 @@
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][0] = no_row;
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][1] = nama_dept;
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][2] = month_service[2] + "-" + month_service[1] + "-" + month_service[0];
-            if(json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+            var total_time_sec = '00:00:00';
+            if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
               var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
               var time_arr = time.split(":");
-              var total_time_sec = (parseInt(time_arr[0])*3600) + (parseInt(time_arr[1])*60)+ (parseInt(time_arr[2]))
+              total_time_sec = (parseInt(time_arr[0])*3600) + (parseInt(time_arr[1])*60)+ (parseInt(time_arr[2]))
             }
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = parseInt(total_time_sec);
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = parseInt(total_biaya_travel);
@@ -328,10 +334,11 @@
           }
           if(typeof(total_actual_all[nama_dept]) != 'undefined' && typeof(total_actual_all[nama_dept][parseInt(month_service[0])]) != 'undefined') {
             total_actual_all[nama_dept][parseInt(month_service[0])] = total_actual_all[nama_dept][parseInt(month_service[0])] + parseInt(json_service[key].Service_Price);
-            if(json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+            var total_time_sec = '00:00:00';
+            if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
               var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
               var time_arr = time.split(":");
-              var total_time_sec = (time_arr[0]*3600) + (time_arr[1]*60)+ (time_arr[2])
+              total_time_sec = (time_arr[0]*3600) + (time_arr[1]*60)+ (time_arr[2])
             }
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][3]+ parseInt(total_time_sec);
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][4]+ parseInt(total_biaya_travel);
@@ -342,10 +349,11 @@
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][0] = no_row;
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][1] = nama_dept;
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][2] = month_service[2] + "-" + month_service[1] + "-" + month_service[0];
-            if(json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+            var total_time_sec = '00:00:00';
+            if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
               var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
               var time_arr = time.split(":");
-              var total_time_sec = (parseInt(time_arr[0])*3600) + (parseInt(time_arr[1])*60)+ (parseInt(time_arr[2]))
+              total_time_sec = (parseInt(time_arr[0])*3600) + (parseInt(time_arr[1])*60)+ (parseInt(time_arr[2]))
             }
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = parseInt(total_time_sec);
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = parseInt(total_biaya_travel);
