@@ -178,6 +178,9 @@
       json_request_key.forEach(function(key) {
         var date_arr = json_request[key].Tanggal_Berangkat.split('-');
         var action = "<button type='button' class='btn btn-sm btn-secondary' onclick='open_detail(this)' data-key='"+key+"'>Detail</button>";
+        if(json_request[key].Status == "Approve" || json_request[key].Status == "Pending"){
+          action += " <button type='button' class='btn btn-sm btn-danger' onclick='cancel_request(this)' data-key='"+key+"'>Cancel</button>";
+        }
         var json_arr = [json_request[key].Nama || "", json_request[key].Departemen || "", json_request[key].Proyek || "", json_request[key].Perjalanan || "", json_request[key].Alamat_Asal || "", json_request[key].Alamat_Tujuan || "", date_arr[2] + "-" + date_arr[1] + "-" + date_arr[0] || "", json_request[key].Status || "", action];
         json_onprogress_order.push(json_arr);
       });
@@ -185,7 +188,7 @@
       $('.datatables').DataTable({
         responsive: true,
         data: json_onprogress_order,
-        order:[[ 6, "desc" ]],
+        order:[[ 6, "desc" ], [ 8, "asc" ]],
         dom: 'Bfrtip',
         buttons: [
           'excelHtml5',
@@ -230,6 +233,56 @@
     $(".table-detail tbody").html(tr);
     $('.modal_detail').modal({
       "show": true
+    })
+  }
+
+  function cancel_request(btn) {
+    Swal.fire({
+      title: 'Are you sure to <b class="text-danger">&nbsp;Cancel&nbsp;</b> this?',
+      text: "You won't be able to revert this!",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, Cancel it!'
+    }).then((result) => {
+      if (result.value) {
+      	sweetalert('loading', 'Please Wait...');
+        var key = $(btn).attr("data-key");
+        var driverId_save = "";
+        var docRef = db.collection('Request').doc(key);
+        docRef.get().then(function(doc) {
+          if (doc.exists) {
+            var data = doc.data();
+            console.log(data.driverId);
+            driverId_save = data.driverId;
+            var removeCapital = docRef.update({
+              verId: firebase.firestore.FieldValue.delete(),
+              driverId: firebase.firestore.FieldValue.delete(),
+              Status: "Cancel"
+            }).then(function() {
+              data_driver = {
+                Status : "Available",
+              }
+              var docRef_driver = db.collection("Users").doc(driverId_save);
+              docRef_driver.update(data_driver)
+              .then(function() {
+                sweetalert("success", "Request successfully canceled!");
+              })
+              .catch(function(error) {
+                sweetalert("error", "Error updating request: "+error);
+              });
+            })
+            .catch(function(error) {
+              sweetalert("error", "Error updating document: "+error);
+            });
+          } else {
+            window.location = '<?php echo base_url() ?>order/history_order_list';
+          }
+        }).catch(function(error) {
+          sweetalert("error", "Error getting document:"+error);
+        })
+      }
     })
   }
 </script>

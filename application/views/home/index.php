@@ -161,6 +161,29 @@
   </div>
 </div>
 <script type="text/javascript">
+	//https://coolors.co/d33f49-21fa90-0c090d-30bced-303036
+	<?php
+    $months = array(
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July ',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    );
+    $this_month = date("n") - 1;
+
+		for ($i=$this_month-2; $i <= $this_month; $i++) { 
+      $date_pretty[$i] 		= $months[$i];
+    }
+    echo "var month_name = JSON.parse('".json_encode($date_pretty)."');";
+	?>
   load_onprogress_order();
 
 	function load_onprogress_order() {
@@ -259,13 +282,15 @@
       json_budget = data;
     }
     if((nama_var == 'biaya' || nama_var == 'service' || nama_var == 'budget') && Object.keys(json_request).length > 0 && Object.keys(json_travel).length > 0){
-      var total_actual = 0;
+      var total_actual = 0;//budgetvsactualChart
       var total_bensin = 0;
       var total_angin = 0;
       var total_parkir = 0;
       var total_lain = 0;
       var total_service = 0;
+      var total_rent = 0;
       var total_actual_all = {};
+      var total_actual_all_month = {};
       var data_table_daily_chart = {};
       var d = new Date();
       var json_biaya_key = Object.keys(json_biaya);
@@ -273,49 +298,65 @@
       json_biaya_key.forEach(function(key) {
         var date_service = json_biaya[key].Tanggal;
         var month_service = date_service.split("-");
-        if((parseInt(month_service[1]) - 1) == d.getMonth()){
-          var total_biaya_travel = parseInt(json_biaya[key].Angin) + parseInt(json_biaya[key].Bensin) + parseInt(json_biaya[key].Lain) + parseInt(json_biaya[key].Parkir);
-          total_actual = total_actual + parseInt(total_biaya_travel);
-          total_bensin = total_bensin + parseInt(json_biaya[key].Bensin);
-          total_angin = total_angin + parseInt(json_biaya[key].Angin);
-          total_parkir = total_parkir + parseInt(json_biaya[key].Parkir);
-          total_lain = total_lain + parseInt(json_biaya[key].Lain);
-          if(json_biaya[key].Travel_Id === "null"){
-            var nama_dept = "Service";
+        var nama_dept = "";
+        if(json_biaya[key].Travel_Id === "null"){
+          nama_dept = "Service";
+        }
+        else{
+          if (json_travel[json_biaya[key].Travel_Id].Request_id in json_request){
+            nama_dept = json_request[json_travel[json_biaya[key].Travel_Id].Request_id].Departemen;
           }
-          else{
-            var nama_dept = json_request[json_travel[json_biaya[key].Travel_Id].Request_id].Departemen;
+        }
+        if(nama_dept != ""){
+          var total_biaya_travel = parseInt(json_biaya[key].Angin) + parseInt(json_biaya[key].Bensin) + parseInt(json_biaya[key].Lain) + parseInt(json_biaya[key].Parkir);//budgetvsactualChart
+          
+          if(typeof(total_actual_all_month[nama_dept]) == 'undefined'){
+            total_actual_all_month[nama_dept] = {};
           }
-          if(typeof(total_actual_all[nama_dept]) == 'undefined'){
-            total_actual_all[nama_dept] = {};
-            data_table_daily_chart[nama_dept] = {};
-          }
-          if(typeof(total_actual_all[nama_dept]) != 'undefined' && typeof(total_actual_all[nama_dept][parseInt(month_service[0])]) != 'undefined') {
-            total_actual_all[nama_dept][parseInt(month_service[0])] = total_actual_all[nama_dept][parseInt(month_service[0])] + parseInt(total_biaya_travel);
-            var total_time_sec = '00:00:00';
-            if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
-              var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
-              var time_arr = time.split(":");
-              total_time_sec = (time_arr[0]*3600) + (time_arr[1]*60)+ (time_arr[2])
-            }
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][3]+ parseInt(total_time_sec);
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][4]+ parseInt(total_biaya_travel);
+          if(typeof(total_actual_all_month[nama_dept]) != 'undefined' && typeof(total_actual_all_month[nama_dept][parseInt(month_service[1])]) != 'undefined') {
+            total_actual_all_month[nama_dept][parseInt(month_service[1])] = total_actual_all_month[nama_dept][parseInt(month_service[1])] + parseInt(total_biaya_travel);
           }
           else {
-            total_actual_all[nama_dept][parseInt(month_service[0])] = parseInt(total_biaya_travel);
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])] = {};
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][0] = no_row;
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][1] = nama_dept;
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][2] = month_service[2] + "-" + month_service[1] + "-" + month_service[0];
-            var total_time_sec = '00:00:00';
-            if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
-              var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
-              var time_arr = time.split(":");
-              total_time_sec = (parseInt(time_arr[0])*3600) + (parseInt(time_arr[1])*60)+ (parseInt(time_arr[2]))
+            total_actual_all_month[nama_dept][parseInt(month_service[1])] = parseInt(total_biaya_travel);
+          }
+
+          if((parseInt(month_service[1]) - 1) == d.getMonth()){
+            total_actual = total_actual + parseInt(total_biaya_travel);//budgetvsactualChart
+            total_bensin = total_bensin + parseInt(json_biaya[key].Bensin);//montlycostChart
+            total_angin = total_angin + parseInt(json_biaya[key].Angin);//montlycostChart
+            total_parkir = total_parkir + parseInt(json_biaya[key].Parkir);//montlycostChart
+            total_lain = total_lain + parseInt(json_biaya[key].Lain);//montlycostChart
+            if(typeof(total_actual_all[nama_dept]) == 'undefined'){
+              total_actual_all[nama_dept] = {};
+              data_table_daily_chart[nama_dept] = {};
             }
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = parseInt(total_time_sec);
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = parseInt(total_biaya_travel);
-            no_row++;
+            if(typeof(total_actual_all[nama_dept]) != 'undefined' && typeof(total_actual_all[nama_dept][parseInt(month_service[0])]) != 'undefined') {
+              total_actual_all[nama_dept][parseInt(month_service[0])] = total_actual_all[nama_dept][parseInt(month_service[0])] + parseInt(total_biaya_travel);
+              var total_time_sec = '00:00:00';
+              if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+                var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
+                var time_arr = time.split(":");
+                total_time_sec = (time_arr[0]*3600) + (time_arr[1]*60)+ (time_arr[2])
+              }
+              data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][3]+ parseInt(total_time_sec);
+              data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][4]+ parseInt(total_biaya_travel);
+            }
+            else {
+              total_actual_all[nama_dept][parseInt(month_service[0])] = parseInt(total_biaya_travel);
+              data_table_daily_chart[nama_dept][parseInt(month_service[0])] = {};
+              data_table_daily_chart[nama_dept][parseInt(month_service[0])][0] = no_row;
+              data_table_daily_chart[nama_dept][parseInt(month_service[0])][1] = nama_dept;
+              data_table_daily_chart[nama_dept][parseInt(month_service[0])][2] = month_service[2] + "-" + month_service[1] + "-" + month_service[0];
+              var total_time_sec = '00:00:00';
+              if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+                var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
+                var time_arr = time.split(":");
+                total_time_sec = (parseInt(time_arr[0])*3600) + (parseInt(time_arr[1])*60)+ (parseInt(time_arr[2]))
+              }
+              data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = parseInt(total_time_sec);
+              data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = parseInt(total_biaya_travel);
+              no_row++;
+            }
           }
         }
       });
@@ -325,78 +366,129 @@
         var nama_dept = "Service";
         var date_service = json_service[key].Service_Month;
         var month_service = date_service.split("-");
+        var service_rent = 0;
+        if(isNaN(parseInt(json_service[key].Service_Rent)) != true){
+          service_rent = parseInt(json_service[key].Service_Rent);
+        }
+        var service_price = 0;
+        if(isNaN(parseInt(json_service[key].Service_Price)) != true){
+          service_price = parseInt(json_service[key].Service_Price);
+        }
+        
+        if(typeof(total_actual_all_month[nama_dept]) == 'undefined'){
+          total_actual_all_month[nama_dept] = {};
+        }        
+        if(typeof(total_actual_all_month[nama_dept]) != 'undefined' && typeof(total_actual_all_month[nama_dept][parseInt(month_service[1])]) != 'undefined') {
+          total_actual_all_month[nama_dept][parseInt(month_service[1])] = total_actual_all_month[nama_dept][parseInt(month_service[1])] + service_price + service_rent;
+        }
+        else {
+          total_actual_all_month[nama_dept][parseInt(month_service[1])] = service_price + service_rent;
+        }
+        
         if((parseInt(month_service[1]) - 1) == d.getMonth()){
-          total_actual = total_actual + parseInt(json_service[key].Service_Price);
-          total_service = total_service + parseInt(json_service[key].Service_Price);
+          total_actual = total_actual + service_price + service_rent;//budgetvsactualChart
+          total_service = total_service + service_price;//montlycostChart
+          total_rent = total_rent + service_rent;//montlycostChart
           if(typeof(total_actual_all[nama_dept]) == 'undefined'){
             total_actual_all[nama_dept] = {};
             data_table_daily_chart[nama_dept] = {};
           }
           if(typeof(total_actual_all[nama_dept]) != 'undefined' && typeof(total_actual_all[nama_dept][parseInt(month_service[0])]) != 'undefined') {
-            total_actual_all[nama_dept][parseInt(month_service[0])] = total_actual_all[nama_dept][parseInt(month_service[0])] + parseInt(json_service[key].Service_Price);
+            total_actual_all[nama_dept][parseInt(month_service[0])] = total_actual_all[nama_dept][parseInt(month_service[0])] + service_price + service_rent;
             var total_time_sec = '00:00:00';
-            if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
-              var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
-              var time_arr = time.split(":");
-              total_time_sec = (time_arr[0]*3600) + (time_arr[1]*60)+ (time_arr[2])
-            }
+            // if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+            //   var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
+            //   var time_arr = time.split(":");
+            //   total_time_sec = (time_arr[0]*3600) + (time_arr[1]*60)+ (time_arr[2])
+            // }
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][3]+ parseInt(total_time_sec);
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][4]+ parseInt(total_biaya_travel);
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = data_table_daily_chart[nama_dept][parseInt(month_service[0])][4]+ service_price + service_rent;
           }
           else {
-            total_actual_all[nama_dept][parseInt(month_service[0])] = parseInt(json_service[key].Service_Price);
+            total_actual_all[nama_dept][parseInt(month_service[0])] = service_price + service_rent;
             data_table_daily_chart[nama_dept][parseInt(month_service[0])] = {};
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][0] = no_row;
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][1] = nama_dept;
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][2] = month_service[2] + "-" + month_service[1] + "-" + month_service[0];
             var total_time_sec = '00:00:00';
-            if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
-              var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
-              var time_arr = time.split(":");
-              total_time_sec = (parseInt(time_arr[0])*3600) + (parseInt(time_arr[1])*60)+ (parseInt(time_arr[2]))
-            }
+            // if(json_biaya[key].Travel_Id !== "null" && json_travel[json_biaya[key].Travel_Id].hasOwnProperty('Waktu_Perjalanan') == true){
+            //   var time = json_travel[json_biaya[key].Travel_Id].Waktu_Perjalanan;
+            //   var time_arr = time.split(":");
+            //   total_time_sec = (parseInt(time_arr[0])*3600) + (parseInt(time_arr[1])*60)+ (parseInt(time_arr[2]))
+            // }
             data_table_daily_chart[nama_dept][parseInt(month_service[0])][3] = parseInt(total_time_sec);
-            data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = parseInt(total_biaya_travel);
+            data_table_daily_chart[nama_dept][parseInt(month_service[0])][4] = service_price + service_rent;
             no_row++;
           }
         }
       });
 
       var daysinmonth = new Date(2020, d.getMonth()+1, 0).getDate();
-      var dataset_chart_daily_dept = [];
+      var dataset_chart_month_dept = [];
       var dataset_table_daily_chart = [];
       var total_actual_key = Object.keys(total_actual_all);
+      var total_actual_month_key = Object.keys(total_actual_all_month);
       var coolors = ["rgba(0, 123, 255, 1)", "rgba(40, 167, 69, 1)", "rgba(251, 54, 64, 1)", "rgba(247, 208, 2, 1)"];
       var coolors_tr = ["rgba(0, 123, 255, 0.1)", "rgba(40, 167, 69, 0.1)", "rgba(251, 54, 64, 0.1)", "rgba(247, 208, 2, 0.1)"];
       var no = 0;
       no_row = 1;
+
+      var service_per_month = [];
+      if(typeof(total_actual_all_month["Service"]) != 'undefined'){
+        var total_service_month_key = Object.keys(total_actual_all_month["Service"]);
+        total_service_month_key.forEach(function(key) {
+          service_per_month[key] = (total_actual_all_month["Service"][key] / (total_actual_month_key.length - 1));
+        })
+      }
+
+      total_actual_month_key.forEach(function(key) {
+        if(key != "Service"){
+          var total_actual_dept = [];
+          for (let i = (d.getMonth()+1-2); i <= d.getMonth()+1; i++) {
+            if(typeof(total_actual_all_month[key]) != 'undefined' && typeof(total_actual_all_month[key][i]) != 'undefined') {
+              // total_actual_dept[] = total_actual_all_month[key][i];
+              var total_data = total_actual_all_month[key][i];
+              if(typeof(service_per_month[i]) != 'undefined'){
+                total_data = total_data + service_per_month[i];
+              }
+              total_actual_dept.push(total_data);
+            }
+            else{
+              // total_actual_dept[] = 0;
+              var total_data = 0;
+              if(typeof(service_per_month[i]) != 'undefined'){
+                total_data = total_data + service_per_month[i];
+              }
+              total_actual_dept.push(total_data);
+            }
+          }
+          var data_set = {
+            label: key,
+            borderColor: coolors[no],
+            backgroundColor: coolors_tr[no],
+            borderWidth: 1,
+            data: total_actual_dept,
+            lineTension: 0,
+            fill: true
+          }
+          dataset_chart_month_dept.push(data_set);
+          no++;
+        }
+      })
+      console.log(dataset_chart_month_dept)
+      create_dailyreportChart(dataset_chart_month_dept);
+      
       total_actual_key.forEach(function(key) {
-        var total_actual_dept = [];
         for (let i = 1; i <= daysinmonth; i++) {
           if(typeof(total_actual_all[key]) != 'undefined' && typeof(total_actual_all[key][i]) != 'undefined') {
-            total_actual_dept[i-1] = total_actual_all[key][i];
             var temp_sec = data_table_daily_chart[key][i][3];
             var temp_time = [pad(Math.floor(temp_sec/3600)), pad(Math.floor(temp_sec/60)%60), pad(temp_sec%60), ].join(":");
             var temp_data = [no_row, data_table_daily_chart[key][i][1], data_table_daily_chart[key][i][2], temp_time, data_table_daily_chart[key][i][4]];
             dataset_table_daily_chart.push(temp_data);
             no_row++;
           }
-          else {
-            total_actual_dept[i-1] = 0;
-          }
         }
-        var data_set = {
-          label: key,
-          borderColor: coolors[no],
-          backgroundColor: coolors_tr[no],
-          data: total_actual_dept,
-          lineTension: 0,
-          fill: true
-        }
-        dataset_chart_daily_dept.push(data_set);
-        no++;
       });
-      create_dailyreportChart(dataset_chart_daily_dept);
 
       $('.datatables.tbl-daily-chart').DataTable().clear().destroy();
       $('.datatables.tbl-daily-chart').DataTable({
@@ -417,7 +509,7 @@
       }
       create_budgetvsactualChart(budget_now, total_actual);
       var label_monthly = ["Bensin", "Sewa Kendaraan", "Uang Parkir", "Uang Isi Angin", "Service", "Lainnya"];
-      var data_monthly = [total_bensin, 0, total_parkir, total_angin, total_service, total_lain];
+      var data_monthly = [total_bensin, total_rent, total_parkir, total_angin, total_service, total_lain];
       data_monthly.forEach(function (value, i) {
         if(parseInt(value) == 0){
           label_monthly.splice(i, 1);
@@ -495,28 +587,6 @@
       "show": true
     })
   }
-	//https://coolors.co/d33f49-21fa90-0c090d-30bced-303036
-	<?php
-    // $months = array(
-    //   'January',
-    //   'February',
-    //   'March',
-    //   'April',
-    //   'May',
-    //   'June',
-    //   'July ',
-    //   'August',
-    //   'September',
-    //   'October',
-    //   'November',
-    //   'December',
-    // );
-    // $this_month = date("n") - 1;
-
-		for ($i=1; $i <= date('t'); $i++) { 
-      $date_pretty[] 		= $i;
-    }
-	?>
   var dailyreportChart;
   function create_dailyreportChart(data_data) {
     if (dailyreportChart != undefined || dailyreportChart !=null) {
@@ -524,19 +594,11 @@
     }
     dailyreportChart = new Chart(document.getElementById('dailyreportChart').getContext('2d'), {
       // The type of chart we want to create
-      type: 'line',
+      type: 'bar',
 
       // The data for our dataset
       data: {
         labels: ['<?php echo join("', '", $date_pretty) ?>'],
-        // datasets: [{
-        //   label: 'Actual Cost',
-        //   borderColor: 'rgba(0, 123, 255, 1)',
-        //   backgroundColor: 'rgba(0, 123, 255, 0.1)',
-        //   data: data_data,
-        //   lineTension: 0,
-        //   fill: true
-        // },],
         datasets: data_data,
       },
 
@@ -559,8 +621,6 @@
                 // return data.datasets[tooltipItems[0].datasetIndex].label;
               },
               label: function (tooltipItems, data) {
-                console.log(tooltipItems.datasetIndex);
-                console.log(data.datasets);
                 return data.datasets[tooltipItems.datasetIndex].label+': Rp. ' + tooltipItems.yLabel;
               }
           }
