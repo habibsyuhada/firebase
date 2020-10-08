@@ -641,7 +641,7 @@
           xAxes: [{ 
             scaleLabel: {
               display: true,
-              labelString: "Date",
+              labelString: "Month",
               fontStyle: "bold"
             },
             gridLines: {
