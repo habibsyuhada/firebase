@@ -223,7 +223,10 @@
     .onSnapshot(function(querySnapshot) {
     	var json_all = [];
       querySnapshot.forEach(function(doc) {
-        json_all[doc.data().month] = doc.data().total
+        if(typeof(json_all[doc.data().year]) == 'undefined'){
+          json_all[doc.data().year] = {};
+        }
+        json_all[doc.data().year][doc.data().month] = doc.data().total
       });
       gabung_data('budget',json_all);
     });
@@ -504,8 +507,8 @@
       $('#loading_daily_table').hide();
 
       var budget_now = 0;
-      if(!(typeof json_budget[(d.getMonth() + 1)] == 'undefined')){
-        budget_now = json_budget[(d.getMonth() + 1)];
+      if(!(typeof json_budget[d.getFullYear()][(d.getMonth() + 1)] == 'undefined')){
+        budget_now = json_budget[d.getFullYear()][(d.getMonth() + 1)];
       }
       create_budgetvsactualChart(budget_now, total_actual);
       var label_monthly = ["Bensin", "Sewa Kendaraan", "Uang Parkir", "Uang Isi Angin", "Service", "Lainnya"];

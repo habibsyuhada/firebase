@@ -12,7 +12,7 @@
 		<!-- sidebar menu area start -->
 		<div class="sidebar-menu">
 			<div class="sidebar-header bg-white">
-				<div class="logo py-3 text-nowrap text-left">
+				<div class="logo text-nowrap text-left">
 					<a href="#" class="h3 font-weight-bold"><img src="<?php echo base_url() ?>assets/images/logo_sucofindo.png"  width="50px" alt="logo"> CAR-e Batam</a>
 				</div>
 			</div>

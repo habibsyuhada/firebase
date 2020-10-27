@@ -7,6 +7,10 @@
             <div class="loader my-4"></div>
             <h5 class="text-center">Loading...</h5>
           </div>
+    			<div class="form-group">
+            <label class="col-form-label">Year Budget</label>
+            <input class="form-control" type="number" name="year" placeholder="---" required>
+          </div>
           <?php
             $months = array(
               'January',
@@ -49,31 +53,48 @@
     e.preventDefault();
     sweetalert('loading', 'Please Wait...');
 
-    db.collection("Budget").add({
-      month : $("select[name=month]").val(),
-      total : $("input[name=total]").val(),
-    })
-    .then(function() {
-      sweetalert('success', 'You successfully insert new user.');
-      $('form').trigger("reset");
-    })
-    .catch(function(error) {
-      console.error("Error adding document: ", error);
-      sweetalert('error', error.message);
+    var validRef = db.collection("Budget").where("year", "==", $("input[name=year]").val()).where("month", "==", $("select[name=month]").val());
+    validRef.get().then(snap => {
+      size = snap.size;
+      if(size < 1){
+        db.collection("Budget").add({
+          year : $("input[name=year]").val(),
+          month : $("select[name=month]").val(),
+          total : $("input[name=total]").val(),
+        })
+        .then(function() {
+          sweetalert('success', 'You successfully insert new budget.');
+          $('form').trigger("reset");
+        })
+        .catch(function(error) {
+          console.error("Error adding document: ", error);
+          sweetalert('error', error.message);
+        });
+      }
+      else{
+        sweetalert("error", "Duplicate Data");
+      }
+    }).catch(function(error) {
+      console.log("Error getting document:", error);
     });
 
 		return  false;
   });
 
   <?php elseif($module == 'edit'): ?>
+    var def_year;
+    var def_month;
     $('#loading_firebase').show();
     var docRef = db.collection("Budget").doc("<?php echo $id; ?>");
     docRef.get().then(function(doc) {
       if (doc.exists) {
         var data = doc.data();
+        $("input[name=year]").val(data.year);
         $("select[name=month]").val(data.month);
         $("input[name=total]").val(data.total);
         $('#loading_firebase').hide();
+        def_year = data.year;
+        def_month = data.month;
       } else {
         window.location = '<?php echo base_url() ?>budget';
       }
@@ -84,19 +105,35 @@
     $("form").submit(function(e){
       e.preventDefault();
       sweetalert('loading', 'Please Wait...');
-      
-      var data = {
-        month : $("select[name=month]").val(),
-        total : $("input[name=total]").val(),
-      }
-      docRef = db.collection("Budget").doc("<?php echo $id; ?>");
-      docRef.update(data)
-      .then(function() {
+      if(def_year == $("input[name=year]").val() && def_month == $("select[name=month]").val()){
         sweetalert("success", "Document successfully updated!");
-      })
-      .catch(function(error) {
-        sweetalert("error", "Error updating document: "+error);
-      });
+      }
+      else{
+        var validRef = db.collection("Budget").where("year", "==", $("input[name=year]").val()).where("month", "==", $("select[name=month]").val());
+        validRef.get().then(snap => {
+          size = snap.size;
+          if(size < 1){
+            var data = {
+              year : $("input[name=year]").val(),
+              month : $("select[name=month]").val(),
+              total : $("input[name=total]").val(),
+            }
+            docRef = db.collection("Budget").doc("<?php echo $id; ?>");
+            docRef.update(data)
+            .then(function() {
+              sweetalert("success", "Document successfully updated!");
+            })
+            .catch(function(error) {
+              sweetalert("error", "Error updating document: "+error);
+            });
+          }
+          else{
+            sweetalert("error", "Duplicate Data");
+          }
+        }).catch(function(error) {
+          console.log("Error getting document:", error);
+        });
+      }
     });
 
   <?php endif; ?>

@@ -6,6 +6,7 @@
 	    		<table class="table table-bordered text-center datatables">
 	          <thead class="text-uppercase bg-primary">
 	            <tr class="text-white">
+	              <th>Year Budget</th>
 	              <th>Month Budget</th>
 	              <th>Total Budget</th>
 	              <th>Action</th>
@@ -45,7 +46,7 @@
         var data = doc.data();
         var action = "<button type='button' class='btn btn-sm btn-danger' onclick='delete_data(this)' data-key='"+doc.id+"'><i class='fa fa-trash'></i></button>"+
 					"&nbsp;<a href='<?php echo base_url() ?>budget/budget_edit/"+doc.id+"' class='btn btn-sm btn-warning'><i class='fa fa-pencil'></i></a>";
-        var json_arr = [months[(data.month - 1)] || "", data.total || "", action];
+        var json_arr = [data.year || "", "<span class='d-none'>"+ ("0" + data.month).slice(-2) +"</span>"+months[(data.month - 1)] || "", data.total || "", action];
         json_all.push(json_arr);
       });
 
@@ -54,7 +55,7 @@
 	    $('.datatables').DataTable({
 	    	responsive: true,
 	    	data: json_all,
-	    	order:[]
+	    	order:[[ 0, 'desc' ], [ 1, 'desc' ]]
 	    }).draw();
 	    $('#loading_firebase').hide();
     });
