@@ -24,6 +24,13 @@
             <label class="col-form-label">Old Picture :</label>
             <div id="old_picture"><div class="loader"></div></div>
           </div>
+          <div class="form-group">
+            <label class="col-form-label">Status :</label>
+            <select class="form-control" name="status" required>
+              <option value="available">Available</option>
+              <option value="unavailable">Unavailable</option>
+            </select>
+          </div>
           <?php endif; ?>
           <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
           <a href="<?php echo base_url() ?>car" class="btn btn-secondary">Back</a>
@@ -78,6 +85,7 @@
         var data = doc.data();
         $("input[name=nama_mobil]").val(data.nama_mobil);
         $("input[name=no_polisi]").val(data.no_polisi);
+        $("select[name=status]").val(data.status);
         storageRef.child('mobil/'+data.src_gambar).getDownloadURL().then(function(url) {
 					$("#old_picture").html("<img style='max-height: 400px; max-width: 400px;' src='"+url+"'/>");
 				}).catch(function(error) {
@@ -104,6 +112,7 @@
         data = {
           nama_mobil : $("input[name=nama_mobil]").val(),
           no_polisi : $("input[name=no_polisi]").val(),
+          status : $("select[name=status]").val(),
         }
         docRef = db.collection("Car").doc("<?php echo $id; ?>");
         docRef.update(data)
@@ -118,6 +127,7 @@
         data = {
           nama_mobil : $("input[name=nama_mobil]").val(),
           no_polisi : $("input[name=no_polisi]").val(),
+          status : $("select[name=status]").val(),
           src_gambar : file.name,
         }
         //dynamically set reference to the file name
