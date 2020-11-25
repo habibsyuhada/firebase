@@ -8,6 +8,7 @@
 	            <tr class="text-white">
 	              <th>Car Name</th>
 	              <th>Police Number</th>
+	              <th>Status</th>
 	              <th>Picture</th>
 	              <th>Action</th>
 	            </tr>
@@ -49,7 +50,7 @@
 					"&nbsp;<a href='<?php echo base_url() ?>car/car_edit/"+doc.id+"' class='btn btn-sm btn-warning'><i class='fa fa-pencil'></i></a>";
 				var id_car = data.src_gambar.split(".");
 				id_car = id_car[0];
-        var json_arr = [data.nama_mobil || "", data.no_polisi || "", '<div id="car_'+id_car+'"><div class="loader"></div></div>' || "", action];
+        var json_arr = [data.nama_mobil || "", data.no_polisi || "", data.status || "", '<div id="car_'+id_car+'"><div class="loader"></div></div>' || "", action];
         json_all.push(json_arr);
         car_pic_name.push(data.src_gambar);
       });
