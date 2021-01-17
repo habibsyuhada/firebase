@@ -27,7 +27,10 @@
           </div>
           <div class="form-group">
             <label class="col-form-label">Department</label>
-            <input class="form-control" type="text" name="department" placeholder="---" required>
+            <!-- <input class="form-control" type="text" name="department" placeholder="---" required> -->
+            <select class="form-control" name="department" required>
+              <option value="">---</option>
+            </select>
           </div>
           <button type="submit" class="btn btn-success"><i class="fa fa-check"></i> Submit</button>
           <a href="<?php echo base_url() ?>user" class="btn btn-secondary">Back</a>
@@ -37,6 +40,17 @@
   </div>
 </div>
 <script type="text/javascript">
+  db.collection("Bidang")
+  .onSnapshot(function(querySnapshot) {
+    var option_str = [];
+    querySnapshot.forEach(function(doc) {
+      var data = doc.data();
+      var json_arr = "<option value='"+data.nama+"'>"+data.nama+"</option>";
+      option_str += json_arr;
+    });
+    $("select[name=department]").append(option_str);
+  });
+      
   <?php if($module == 'new'): ?>
 	$("form").submit(function(e){
     e.preventDefault();
@@ -48,10 +62,8 @@
     	Department : $("input[name=department]").val(),
       Password : '123456',
     }
-    // console.log(data);
     firebase.auth().createUserWithEmailAndPassword(data.Email, data.Password)
     .then(function(res){
-      // console.log(res);
       send_data(data, res.user)
     }).catch(function(error) {
       console.log(error.message);
@@ -62,8 +74,6 @@
   });
 
 	async function send_data(data, user) {
-    console.log(user);
-    console.log(user.uid);
 		var alert;
 		db.collection("Users").doc(user.uid).set({
 	    Nama: data.Name,
@@ -73,8 +83,6 @@
 	    Password: data.Password,
 		})
 		.then(function() {
-		  // console.log(docRef);
-      // console.log("Document written with ID: ", docRef.id);
       sweetalert('success', 'You successfully insert new user.');
       $('form').trigger("reset");
 		})
@@ -92,7 +100,8 @@
         $("input[name=name]").val(data.Nama);
         $("input[name=email]").val(data.Email);
         $("select[name=role]").val(data.Role);
-        $("input[name=department]").val(data.Departemen);
+        // $("input[name=department]").val(data.Departemen);
+        $("select[name=department]").val(data.Departemen);
         $('#loading_firebase').hide();
 
         $("input[name=email]").attr('disabled', true);
