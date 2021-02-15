@@ -19,7 +19,8 @@
         <div class="block w-full overflow-x-scroll">
           <!-- Projects table -->
           <div class="flex-auto px-4 lg:px-10 py-10 pt-0 bg-gray-100">
-            <form method="POST" action="<?php echo base_url() ?>department/department_new_process">
+            <form method="POST" action="<?php echo base_url() ?>department/department_edit_process">
+              <input type="hidden" name="id" value="<?php echo $department['id'] ?>" required/>
               <br>
               <h6 class="text-gray-500 text-sm mt-3 mb-6 font-bold uppercase">
                 Department Information
@@ -30,7 +31,7 @@
                     <label class="block uppercase text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password" >
                       Department Name
                     </label>
-                    <input type="text" name="department_name" class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150" required/>
+                    <input type="text" name="department_name" class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150" value="<?php echo $department['department_name'] ?>" required/>
                   </div>
                   <button class="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" type="submit">
                     Submit

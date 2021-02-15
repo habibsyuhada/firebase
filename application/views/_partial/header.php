@@ -117,23 +117,23 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" charset="utf-8"></script>
     <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
     <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
-    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-app.js"></script> -->
 
     <!-- If you enabled Analytics in your project, add the Firebase SDK for Analytics -->
-    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-analytics.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-analytics.js"></script> -->
 
     <!-- Add Firebase products that you want to use -->
-    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-auth.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.2.3/firebase-firestore.js"></script> -->
     <script type="text/javascript">
-        firebase.initializeApp({
-            apiKey: 'AIzaSyBwC5sLWQrEjziZnMaHx6inXs2iK0tvaiI',
-            authDomain: 'car-e-c6518.firebaseapp.com',
-            projectId: 'car-e-c6518',
-            storageBucket: 'car-e-c6518.appspot.com'
-        });
+        // firebase.initializeApp({
+        //     apiKey: 'AIzaSyBwC5sLWQrEjziZnMaHx6inXs2iK0tvaiI',
+        //     authDomain: 'car-e-c6518.firebaseapp.com',
+        //     projectId: 'car-e-c6518',
+        //     storageBucket: 'car-e-c6518.appspot.com'
+        // });
 
-        var db = firebase.firestore();
+        // var db = firebase.firestore();
     </script>
 
 

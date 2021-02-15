@@ -19,7 +19,8 @@
         <div class="block w-full overflow-x-scroll">
           <!-- Projects table -->
           <div class="flex-auto px-4 lg:px-10 py-10 pt-0 bg-gray-100">
-            <form method="POST" action="<?php echo base_url() ?>budget/budget_new_process">
+            <form method="POST" action="<?php echo base_url() ?>budget/budget_edit_process">
+              <input type="hidden" name="id" value="<?php echo $budget['id'] ?>" required/>
               <br>
               <h6 class="text-gray-500 text-sm mt-3 mb-6 font-bold uppercase">
                 Budget Information
@@ -28,9 +29,9 @@
                 <div class="w-full lg:w-12/12 px-4">
                   <div class="relative w-full mb-3">
                     <label class="block uppercase text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password" >
-                      Year
+                    Year
                     </label>
-                    <input type="text" name="year_budget" class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150" required/>
+                    <input type="text" name="year_budget" class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150" value="<?php echo $budget['year_budget'] ?>" required/>
                   </div>
                   <div class="relative w-full mb-3">
                     <label class="block uppercase text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password" >
@@ -55,15 +56,15 @@
                     <select name="month_budget" class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150" required>
                       <option>---</option>
                       <?php foreach ($months as $key => $value) : ?>
-                      <option value="<?php echo $value ?>"><?php echo $value ?></option>
+                      <option value="<?php echo $value ?>" <?php echo ($budget['month_budget'] == $value ? "selected" : "") ?>><?php echo $value ?></option>
                       <?php endforeach; ?>
                     </select>
                   </div>
                   <div class="relative w-full mb-3">
                     <label class="block uppercase text-gray-700 text-xs font-bold mb-2" htmlFor="grid-password" >
-                      Total Budget
+                    Total Budget
                     </label>
-                    <input type="number" name="cost_budget" class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150" required />
+                    <input type="number" name="cost_budget" class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150" value="<?php echo $budget['cost_budget'] ?>" required />
                   </div>
                   <button class="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" type="submit">
                     Submit
