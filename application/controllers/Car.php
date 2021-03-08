@@ -35,7 +35,7 @@ class Car extends CI_Controller
     $form_data = [
       "car_name" => $post['car_name'],
       "police_number" => $post['police_number'],
-      "status" => "Idle",
+      "status" => "Available",
     ];
     $data['car_list'] = $this->car_mod->car_new_process_db($form_data);
 
@@ -61,7 +61,7 @@ class Car extends CI_Controller
     $form_data = [
       "car_name" => $post['car_name'],
       "police_number" => $post['police_number'],
-      "status" => "Idle",
+      "status" => "Available",
     ];
     $where["id"] = $post['id'];
     $data['car_list'] = $this->car_mod->car_edit_process_db($form_data, $where);

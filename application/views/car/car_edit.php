@@ -45,8 +45,8 @@
                     </label>
                     <select name="status" class="px-3 py-3 placeholder-gray-400 text-gray-700 bg-white rounded text-sm shadow focus:outline-none focus:shadow-outline w-full ease-linear transition-all duration-150" required>
                       <option>---</option>
-                      <option value="Idle" <?php echo ($car['status'] == 'Idle' ? "selected" : "") ?>>Idle</option>
-                      <option value="Not Idle" <?php echo ($car['status'] == 'Not Idle' ? "selected" : "") ?>>Not Idle</option>
+                      <option value="Available" <?php echo ($car['status'] == 'Available' ? "selected" : "") ?>>Available</option>
+                      <option value="Not Available" <?php echo ($car['status'] == 'Not Available' ? "selected" : "") ?>>Not Available</option>
                     </select>
                   </div>
                   <button class="bg-pink-500 text-white active:bg-pink-600 font-bold uppercase text-xs px-4 py-2 rounded shadow hover:shadow-md outline-none focus:outline-none mr-1 ease-linear transition-all duration-150" type="submit">
